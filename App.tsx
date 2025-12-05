@@ -145,6 +145,22 @@ const App: React.FC = () => {
     fetchData();
   }, []);
 
+  // Sync Helper to send data to backend
+  const syncData = async (action: string, data?: any, id?: string) => {
+    if (dbStatus === 'disconnected') return;
+    
+    try {
+      await fetch('/api/actions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, data, id })
+      });
+    } catch (error) {
+      console.error("Failed to sync data:", error);
+      alert("Erro ao salvar no banco de dados. Verifique a conexão.");
+    }
+  };
+
   // Authentication Handlers
   const handleLoginSuccess = (type: 'admin' | 'client' | 'employee', userData?: Client | Employee) => {
     setAuthState({
@@ -163,8 +179,8 @@ const App: React.FC = () => {
   };
 
   // State Handlers (Admin)
-  // Note: In a full implementation, these would fetch('/api/...') to save to DB.
-  // For this version, we update local state after initial load.
+  
+  // Products (Local only for now until api/actions supports it)
   const handleAddProduct = (product: Product) => {
     setState(prev => ({ ...prev, products: [...prev.products, product] }));
   };
@@ -227,8 +243,10 @@ const App: React.FC = () => {
     setState(prev => ({ ...prev, transactions: [transaction, ...prev.transactions] }));
   };
 
+  // --- CLIENT HANDLERS (Connected to DB) ---
   const handleAddClient = (client: Client) => {
     setState(prev => ({ ...prev, clients: [...prev.clients, client] }));
+    syncData('create_client', client);
   };
 
   const handleUpdateClient = (client: Client) => {
@@ -236,13 +254,19 @@ const App: React.FC = () => {
       ...prev,
       clients: prev.clients.map(c => c.id === client.id ? client : c)
     }));
+    syncData('update_client', client);
   };
 
   const handleBlockClient = (id: string, blocked: boolean) => {
-    setState(prev => ({
-      ...prev,
-      clients: prev.clients.map(c => c.id === id ? { ...c, blocked } : c)
-    }));
+    const clientToUpdate = state.clients.find(c => c.id === id);
+    if (clientToUpdate) {
+      const updatedClient = { ...clientToUpdate, blocked };
+      setState(prev => ({
+        ...prev,
+        clients: prev.clients.map(c => c.id === id ? updatedClient : c)
+      }));
+      syncData('update_client', updatedClient);
+    }
   };
 
   const handleDeleteClient = (id: string) => {
@@ -250,7 +274,9 @@ const App: React.FC = () => {
       ...prev,
       clients: prev.clients.filter(c => c.id !== id)
     }));
+    syncData('delete_client', null, id);
   };
+  // -----------------------------------------
 
   const handleAddEmployee = (employee: Employee) => {
     setState(prev => ({ ...prev, employees: [...prev.employees, employee] }));
