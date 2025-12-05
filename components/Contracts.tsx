@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   FileCheck, Plus, Search, Printer, Trash2, Eye, X, Save, PenTool, FileText, 
   Upload, FileType, Settings, Bold, Italic, Underline, AlignLeft, AlignCenter, 
@@ -18,6 +18,8 @@ interface ContractsProps {
   onAddTemplate: (template: ContractTemplate) => void;
   onUpdateTemplate: (template: ContractTemplate) => void;
   onDeleteTemplate: (id: string) => void;
+  initialQuote?: Quote | null;
+  onClearInitialQuote?: () => void;
 }
 
 const Contracts: React.FC<ContractsProps> = ({ 
@@ -30,7 +32,9 @@ const Contracts: React.FC<ContractsProps> = ({
   onDeleteContract,
   onAddTemplate,
   onUpdateTemplate,
-  onDeleteTemplate
+  onDeleteTemplate,
+  initialQuote,
+  onClearInitialQuote
 }) => {
   const [activeTab, setActiveTab] = useState<'contracts' | 'templates'>('contracts');
   const [viewMode, setViewMode] = useState<'list' | 'editor' | 'template-editor'>('list');
@@ -49,6 +53,19 @@ const Contracts: React.FC<ContractsProps> = ({
 
   // Filter approved quotes
   const availableQuotes = quotes.filter(q => q.status === 'Aprovado');
+
+  useEffect(() => {
+    if (initialQuote) {
+      setSelectedQuote(initialQuote);
+      setIsModalOpen(true);
+    }
+  }, [initialQuote]);
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedQuote(null);
+    if (onClearInitialQuote) onClearInitialQuote();
+  };
 
   // --- Helpers ---
 
@@ -139,8 +156,7 @@ const Contracts: React.FC<ContractsProps> = ({
     setCurrentContract(newContract);
     setEditableContent(generatedContent);
     setViewMode('editor');
-    setIsModalOpen(false);
-    setSelectedQuote(null);
+    closeModal();
   };
 
   const handleSaveContract = () => {
@@ -647,7 +663,7 @@ const Contracts: React.FC<ContractsProps> = ({
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full p-6 animate-scale-in my-8">
              <div className="flex justify-between items-center mb-6">
                 <h3 className="text-xl font-bold text-slate-800">Gerar Novo Contrato</h3>
-                <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+                <button onClick={closeModal} className="text-slate-400 hover:text-slate-600">
                    <X size={24} />
                 </button>
              </div>

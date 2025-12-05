@@ -447,6 +447,7 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [state, setState] = useState<AppState>(INITIAL_STATE);
+  const [quoteForContract, setQuoteForContract] = useState<Quote | null>(null);
 
   // Authentication Handlers
   const handleLoginSuccess = (type: 'admin' | 'client' | 'employee', userData?: Client | Employee) => {
@@ -653,6 +654,15 @@ const App: React.FC = () => {
   };
 
   // Contract Handlers
+  const handleGenerateContract = (quote: Quote) => {
+    setQuoteForContract(quote);
+    setActiveTab('contracts');
+  };
+
+  const handleClearQuoteForContract = () => {
+    setQuoteForContract(null);
+  };
+
   const handleAddContract = (contract: Contract) => {
     setState(prev => ({ ...prev, contracts: [...prev.contracts, contract] }));
   };
@@ -910,6 +920,7 @@ const App: React.FC = () => {
                 onAddQuote={handleAddQuote}
                 onUpdateQuoteStatus={handleUpdateQuoteStatus}
                 paymentMethods={state.paymentMethods} // Passed to Sales
+                onGenerateContract={handleGenerateContract}
               />
             )}
             {activeTab === 'os' && (
@@ -953,6 +964,8 @@ const App: React.FC = () => {
                 onAddTemplate={handleAddTemplate} // New Handler
                 onUpdateTemplate={handleUpdateTemplate} // New Handler
                 onDeleteTemplate={handleDeleteTemplate} // New Handler
+                initialQuote={quoteForContract}
+                onClearInitialQuote={handleClearQuoteForContract}
               />
             )}
             {activeTab === 'finance' && (

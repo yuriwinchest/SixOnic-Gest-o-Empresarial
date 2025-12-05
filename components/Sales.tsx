@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCart, FileText, Plus, Search, Calendar, User, DollarSign, LayoutList, LayoutGrid, CheckCircle, X, Trash2, ArrowRight } from 'lucide-react';
+import { ShoppingCart, FileText, Plus, Search, Calendar, User, DollarSign, LayoutList, LayoutGrid, CheckCircle, X, Trash2, ArrowRight, FileCheck } from 'lucide-react';
 import { Sale, Quote, Product, Client, SaleItem, PaymentMethod } from '../types';
 
 interface SalesProps {
@@ -11,9 +11,10 @@ interface SalesProps {
   onAddSale: (sale: Sale) => void;
   onAddQuote: (quote: Quote) => void;
   onUpdateQuoteStatus: (id: string, status: 'Aberto' | 'Aprovado' | 'Rejeitado') => void;
+  onGenerateContract: (quote: Quote) => void;
 }
 
-const Sales: React.FC<SalesProps> = ({ sales, quotes, products, clients, paymentMethods, onAddSale, onAddQuote, onUpdateQuoteStatus }) => {
+const Sales: React.FC<SalesProps> = ({ sales, quotes, products, clients, paymentMethods, onAddSale, onAddQuote, onUpdateQuoteStatus, onGenerateContract }) => {
   const [activeTab, setActiveTab] = useState<'sales' | 'quotes'>('sales');
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('grid');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -216,22 +217,32 @@ const Sales: React.FC<SalesProps> = ({ sales, quotes, products, clients, payment
                   </td>
                   {activeTab === 'quotes' && (
                     <td className="px-6 py-4 text-right">
-                       {item.status === 'Aberto' && (
-                         <div className="flex justify-end gap-2">
+                       <div className="flex justify-end gap-2">
+                         {item.status === 'Aberto' && (
+                           <>
+                              <button 
+                                onClick={() => onUpdateQuoteStatus(item.id, 'Aprovado')}
+                                className="p-1 text-emerald-600 hover:bg-emerald-50 rounded" title="Aprovar"
+                              >
+                                <CheckCircle size={18} />
+                              </button>
+                              <button 
+                                onClick={() => onUpdateQuoteStatus(item.id, 'Rejeitado')}
+                                className="p-1 text-red-600 hover:bg-red-50 rounded" title="Rejeitar"
+                              >
+                                <X size={18} />
+                              </button>
+                           </>
+                         )}
+                         {item.status === 'Aprovado' && (
                             <button 
-                              onClick={() => onUpdateQuoteStatus(item.id, 'Aprovado')}
-                              className="p-1 text-emerald-600 hover:bg-emerald-50 rounded" title="Aprovar"
+                              onClick={() => onGenerateContract(item)}
+                              className="p-1 text-indigo-600 hover:bg-indigo-50 rounded" title="Gerar Contrato"
                             >
-                              <CheckCircle size={18} />
+                              <FileCheck size={18} />
                             </button>
-                            <button 
-                              onClick={() => onUpdateQuoteStatus(item.id, 'Rejeitado')}
-                              className="p-1 text-red-600 hover:bg-red-50 rounded" title="Rejeitar"
-                            >
-                              <X size={18} />
-                            </button>
-                         </div>
-                       )}
+                         )}
+                       </div>
                     </td>
                   )}
                 </tr>
@@ -287,21 +298,32 @@ const Sales: React.FC<SalesProps> = ({ sales, quotes, products, clients, payment
                    <span className="text-xl font-bold text-slate-800">R$ {item.totalValue.toFixed(2)}</span>
                 </div>
 
-                {activeTab === 'quotes' && item.status === 'Aberto' && (
-                    <div className="mt-4 pt-2 flex gap-2">
-                        <button 
-                          onClick={() => onUpdateQuoteStatus(item.id, 'Aprovado')}
-                          className="flex-1 bg-emerald-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-emerald-700"
+                {activeTab === 'quotes' && (
+                  <div className="mt-4 pt-2">
+                    {item.status === 'Aberto' ? (
+                      <div className="flex gap-2">
+                          <button 
+                            onClick={() => onUpdateQuoteStatus(item.id, 'Aprovado')}
+                            className="flex-1 bg-emerald-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-emerald-700"
+                          >
+                            Aprovar
+                          </button>
+                          <button 
+                            onClick={() => onUpdateQuoteStatus(item.id, 'Rejeitado')}
+                            className="flex-1 bg-white border border-red-200 text-red-600 py-2 rounded-lg text-sm font-medium hover:bg-red-50"
+                          >
+                            Rejeitar
+                          </button>
+                      </div>
+                    ) : item.status === 'Aprovado' ? (
+                       <button 
+                          onClick={() => onGenerateContract(item)}
+                          className="w-full bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 flex items-center justify-center gap-2"
                         >
-                          Aprovar
+                          <FileCheck size={16} /> Gerar Contrato
                         </button>
-                        <button 
-                          onClick={() => onUpdateQuoteStatus(item.id, 'Rejeitado')}
-                          className="flex-1 bg-white border border-red-200 text-red-600 py-2 rounded-lg text-sm font-medium hover:bg-red-50"
-                        >
-                          Rejeitar
-                        </button>
-                    </div>
+                    ) : null}
+                  </div>
                 )}
              </div>
            ))}
