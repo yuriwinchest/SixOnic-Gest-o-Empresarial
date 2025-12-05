@@ -1,14 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
 import { AppState, TransactionType, OSTatus } from "../types";
 
-const API_KEY = process.env.API_KEY || '';
-
 export const generateBusinessInsight = async (state: AppState): Promise<string> => {
-  if (!API_KEY) {
+  if (!process.env.API_KEY) {
     return "API Key não configurada. Por favor, configure a variável de ambiente para usar a IA.";
   }
 
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   // Prepare a summary of data to save tokens
   const totalRevenue = state.transactions
