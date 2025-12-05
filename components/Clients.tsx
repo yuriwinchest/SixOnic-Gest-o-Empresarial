@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Plus, Search, Edit2, Trash2, MapPin, Phone, FileText, Building2, Briefcase, Mail, Ban, Unlock, LayoutGrid, LayoutList, User } from 'lucide-react';
+import { Users, Plus, Search, Edit2, Trash2, MapPin, Phone, FileText, Building2, Briefcase, Mail, Ban, Unlock, LayoutGrid, LayoutList, User, X } from 'lucide-react';
 import { Client, ClientAddress } from '../types';
 
 interface ClientsProps {
@@ -59,11 +59,11 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
     if (c.type === 'Cliente') {
       matchesSearch = (c.name?.toLowerCase().includes(searchLower) || false) || 
                       (c.cpf?.includes(searchTerm) || false) ||
-                      (c.address.cidade.toLowerCase().includes(searchLower));
+                      (c.address?.cidade?.toLowerCase().includes(searchLower) || false);
     } else {
       matchesSearch = (c.razaoSocial?.toLowerCase().includes(searchLower) || false) || 
                       (c.cnpj?.includes(searchTerm) || false) ||
-                      (c.address.cidade.toLowerCase().includes(searchLower));
+                      (c.address?.cidade?.toLowerCase().includes(searchLower) || false);
     }
 
     return matchesTab && matchesSearch;
@@ -71,14 +71,27 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
 
   const handleOpenAdd = () => {
     setEditingId(null);
-    setFormData({ ...initialClientState, type: activeTab });
+    setFormData({ ...initialClientState, type: activeTab, address: { ...initialAddress } });
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (client: Client) => {
     setEditingId(client.id);
-    setFormData(client);
+    setFormData({
+        ...client,
+        address: client.address || initialAddress
+    });
     setIsModalOpen(true);
+  };
+
+  const handleAddressChange = (field: keyof ClientAddress, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      address: {
+        ...prev.address!,
+        [field]: value
+      }
+    }));
   };
 
   const handleCepBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
@@ -99,7 +112,7 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
               bairro: data.bairro,
               cidade: data.localidade,
               uf: data.uf,
-              complemento: data.complemento
+              complemento: data.complemento || prev.address?.complemento || ''
             }
           }));
         }
@@ -135,7 +148,7 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
               bairro: data.bairro,
               cidade: data.municipio,
               uf: data.uf,
-              complemento: data.complemento
+              complemento: data.complemento || ''
             }
           }));
         }
@@ -265,7 +278,7 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                       </div>
                     </td>
                     <td className="px-6 py-4 text-slate-400 text-sm">
-                      {client.address.cidade} - {client.address.uf}
+                      {client.address?.cidade} - {client.address?.uf}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -331,7 +344,7 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                      </div>
                      <div className="flex items-center gap-2 text-sm text-slate-400">
                         <MapPin size={14} className="text-slate-500" />
-                        <span className="truncate">{client.address.cidade} - {client.address.uf}</span>
+                        <span className="truncate">{client.address?.cidade} - {client.address?.uf}</span>
                      </div>
                   </div>
                </div>
@@ -365,211 +378,218 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
 
       {/* Modal Form */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-w-2xl w-full p-6 animate-scale-in my-8">
-            <h3 className="text-xl font-bold text-slate-100 mb-6">
-              {editingId ? 'Editar' : 'Novo'} {activeTab}
-            </h3>
-            
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Type Specific Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {activeTab === 'Cliente' ? (
-                  <>
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-slate-300 mb-1">Nome Completo</label>
-                      <input 
-                        required
-                        type="text" 
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                        value={formData.name || ''}
-                        onChange={e => setFormData({...formData, name: e.target.value})}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1">CPF</label>
-                      <input 
-                        required
-                        type="text" 
-                        placeholder="000.000.000-00"
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                        value={formData.cpf || ''}
-                        onChange={e => setFormData({...formData, cpf: e.target.value})}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1">RG</label>
-                      <input 
-                        type="text" 
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                        value={formData.rg || ''}
-                        onChange={e => setFormData({...formData, rg: e.target.value})}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1">Estado Civil</label>
-                      <select
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                        value={formData.maritalStatus || 'Solteiro(a)'}
-                        onChange={e => setFormData({...formData, maritalStatus: e.target.value as any})}
-                      >
-                        <option value="Solteiro(a)">Solteiro(a)</option>
-                        <option value="Casado(a)">Casado(a)</option>
-                        <option value="Divorciado(a)">Divorciado(a)</option>
-                        <option value="Viúvo(a)">Viúvo(a)</option>
-                        <option value="Separado(a)">Separado(a)</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1">Celular/WhatsApp</label>
-                      <input 
-                        type="text" 
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                        value={formData.phone || ''}
-                        onChange={e => setFormData({...formData, phone: e.target.value})}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                     <div className="md:col-span-2">
-                       <label className="block text-sm font-medium text-slate-300 mb-1">Razão Social</label>
-                        <input 
-                          required
-                          type="text" 
-                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                          value={formData.razaoSocial || ''}
-                          onChange={e => setFormData({...formData, razaoSocial: e.target.value})}
-                        />
-                     </div>
-                     <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-1">CNPJ</label>
-                        <input 
-                          required
-                          type="text" 
-                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                          value={formData.cnpj || ''}
-                          onChange={e => setFormData({...formData, cnpj: e.target.value})}
-                          onBlur={handleCnpjBlur}
-                          placeholder="00.000.000/0000-00"
-                        />
-                     </div>
-                     <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-1">Telefone Empresa</label>
-                        <input 
-                          type="text" 
-                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                          value={formData.companyPhone || ''}
-                          onChange={e => setFormData({...formData, companyPhone: e.target.value})}
-                        />
-                     </div>
-                     <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-1">Contato Vendedor</label>
-                        <input 
-                          type="text" 
-                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                          value={formData.sellerContact || ''}
-                          onChange={e => setFormData({...formData, sellerContact: e.target.value})}
-                        />
-                     </div>
-                  </>
-                )}
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-white/10 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto animate-scale-in custom-scrollbar">
+            <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-slate-100">
+                    {editingId ? 'Editar' : 'Novo'} {activeTab}
+                    </h3>
+                    <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white transition-colors">
+                        <X size={24} />
+                    </button>
+                </div>
                 
-                {/* Common Fields */}
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
-                  <input 
-                    type="email" 
-                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                    value={formData.email || ''}
-                    onChange={e => setFormData({...formData, email: e.target.value})}
-                  />
-                </div>
-              </div>
-
-              {/* Address Section */}
-              <div className="border-t border-white/10 pt-4">
-                <h4 className="font-medium text-slate-300 mb-3 flex items-center gap-2">
-                  <MapPin size={18} className="text-slate-500" /> Endereço
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                   <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1">CEP</label>
-                      <div className="relative">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Type Specific Fields */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {activeTab === 'Cliente' ? (
+                    <>
+                        <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-slate-300 mb-1">Nome Completo</label>
                         <input 
-                          type="text" 
-                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                          value={formData.address?.cep || ''}
-                          onChange={e => setFormData({...formData, address: {...formData.address!, cep: e.target.value}})}
-                          onBlur={handleCepBlur}
+                            required
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.name || ''}
+                            onChange={e => setFormData({...formData, name: e.target.value})}
                         />
-                        {loadingAddress && <div className="absolute right-3 top-2.5 w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>}
-                      </div>
-                   </div>
-                   <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-slate-300 mb-1">Endereço</label>
-                      <input 
-                        type="text" 
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white bg-slate-800/50"
-                        value={formData.address?.endereco || ''}
-                        readOnly
-                      />
-                   </div>
-                   <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1">Bairro</label>
-                      <input 
-                        type="text" 
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white bg-slate-800/50"
-                        value={formData.address?.bairro || ''}
-                        readOnly
-                      />
-                   </div>
-                   <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1">Cidade</label>
-                      <input 
-                        type="text" 
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white bg-slate-800/50"
-                        value={formData.address?.cidade || ''}
-                        readOnly
-                      />
-                   </div>
-                   <div>
-                      <label className="block text-sm font-medium text-slate-300 mb-1">UF</label>
-                      <input 
-                        type="text" 
-                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white bg-slate-800/50"
-                        value={formData.address?.uf || ''}
-                        readOnly
-                      />
-                   </div>
-                    <div className="md:col-span-3">
-                      <label className="block text-sm font-medium text-slate-300 mb-1">Complemento</label>
-                      <input 
-                        type="text" 
+                        </div>
+                        <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">CPF</label>
+                        <input 
+                            required
+                            type="text" 
+                            placeholder="000.000.000-00"
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.cpf || ''}
+                            onChange={e => setFormData({...formData, cpf: e.target.value})}
+                        />
+                        </div>
+                        <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">RG</label>
+                        <input 
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.rg || ''}
+                            onChange={e => setFormData({...formData, rg: e.target.value})}
+                        />
+                        </div>
+                        <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">Estado Civil</label>
+                        <select
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.maritalStatus || 'Solteiro(a)'}
+                            onChange={e => setFormData({...formData, maritalStatus: e.target.value as any})}
+                        >
+                            <option value="Solteiro(a)">Solteiro(a)</option>
+                            <option value="Casado(a)">Casado(a)</option>
+                            <option value="Divorciado(a)">Divorciado(a)</option>
+                            <option value="Viúvo(a)">Viúvo(a)</option>
+                            <option value="Separado(a)">Separado(a)</option>
+                        </select>
+                        </div>
+                        <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">Celular/WhatsApp</label>
+                        <input 
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.phone || ''}
+                            onChange={e => setFormData({...formData, phone: e.target.value})}
+                        />
+                        </div>
+                    </>
+                    ) : (
+                    <>
+                        <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-slate-300 mb-1">Razão Social</label>
+                            <input 
+                            required
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.razaoSocial || ''}
+                            onChange={e => setFormData({...formData, razaoSocial: e.target.value})}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-300 mb-1">CNPJ</label>
+                            <input 
+                            required
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.cnpj || ''}
+                            onChange={e => setFormData({...formData, cnpj: e.target.value})}
+                            onBlur={handleCnpjBlur}
+                            placeholder="00.000.000/0000-00"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-300 mb-1">Telefone Empresa</label>
+                            <input 
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.companyPhone || ''}
+                            onChange={e => setFormData({...formData, companyPhone: e.target.value})}
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-slate-300 mb-1">Contato Vendedor</label>
+                            <input 
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.sellerContact || ''}
+                            onChange={e => setFormData({...formData, sellerContact: e.target.value})}
+                            />
+                        </div>
+                    </>
+                    )}
+                    
+                    {/* Common Fields */}
+                    <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
+                    <input 
+                        type="email" 
                         className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
-                        value={formData.address?.complemento || ''}
-                        onChange={e => setFormData({...formData, address: {...formData.address!, complemento: e.target.value}})}
-                      />
-                   </div>
+                        value={formData.email || ''}
+                        onChange={e => setFormData({...formData, email: e.target.value})}
+                    />
+                    </div>
                 </div>
-              </div>
 
-              <div className="flex justify-end gap-3 mt-6">
-                <button 
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-slate-400 hover:bg-slate-800 rounded-lg font-medium transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button 
-                  type="submit"
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-900/20"
-                >
-                  Salvar
-                </button>
-              </div>
-            </form>
+                {/* Address Section */}
+                <div className="border-t border-white/10 pt-4">
+                    <h4 className="font-medium text-slate-300 mb-3 flex items-center gap-2">
+                    <MapPin size={18} className="text-slate-500" /> Endereço
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">CEP</label>
+                        <div className="relative">
+                            <input 
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.address?.cep || ''}
+                            onChange={e => handleAddressChange('cep', e.target.value)}
+                            onBlur={handleCepBlur}
+                            />
+                            {loadingAddress && <div className="absolute right-3 top-2.5 w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>}
+                        </div>
+                    </div>
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-slate-300 mb-1">Endereço</label>
+                        <input 
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.address?.endereco || ''}
+                            onChange={e => handleAddressChange('endereco', e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">Bairro</label>
+                        <input 
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.address?.bairro || ''}
+                            onChange={e => handleAddressChange('bairro', e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">Cidade</label>
+                        <input 
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.address?.cidade || ''}
+                            onChange={e => handleAddressChange('cidade', e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">UF</label>
+                        <input 
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.address?.uf || ''}
+                            onChange={e => handleAddressChange('uf', e.target.value)}
+                        />
+                    </div>
+                        <div className="md:col-span-3">
+                        <label className="block text-sm font-medium text-slate-300 mb-1">Complemento</label>
+                        <input 
+                            type="text" 
+                            className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                            value={formData.address?.complemento || ''}
+                            onChange={e => handleAddressChange('complemento', e.target.value)}
+                        />
+                    </div>
+                    </div>
+                </div>
+
+                <div className="flex justify-end gap-3 mt-6">
+                    <button 
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="px-4 py-2 text-slate-400 hover:bg-slate-800 rounded-lg font-medium transition-colors"
+                    >
+                    Cancelar
+                    </button>
+                    <button 
+                    type="submit"
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-900/20"
+                    >
+                    Salvar
+                    </button>
+                </div>
+                </form>
+            </div>
           </div>
         </div>
       )}
