@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { LayoutDashboard, ClipboardList, Package, DollarSign, Menu, X, Bell, Users, LogOut, CheckSquare, ShoppingCart, Briefcase, Settings as SettingsIcon, FileCheck } from 'lucide-react';
+
+import React, { useState, useEffect } from 'react';
+import { LayoutDashboard, ClipboardList, Package, DollarSign, Menu, X, Bell, Users, LogOut, CheckSquare, ShoppingCart, Briefcase, Settings as SettingsIcon, FileCheck, Database, RefreshCw } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import WorkOrders from './components/WorkOrders';
 import Inventory from './components/Inventory';
@@ -15,7 +16,7 @@ import Settings from './components/Settings';
 import Contracts from './components/Contracts';
 import { AppState, Tab, Product, WorkOrder, Transaction, OSTatus, TransactionType, Client, AuthState, ClientPurchase, Checklist, Sale, Quote, Employee, CompanySettings, MarginRule, CostCenter, Contract, PaymentMethod, ContractTemplate } from './types';
 
-// Mock Data
+// Mock Data (Fallback if DB is empty or fails)
 const INITIAL_STATE: AppState = {
   companySettings: {
     name: 'Nexus Automotive Ltda',
@@ -35,10 +36,10 @@ const INITIAL_STATE: AppState = {
     },
     standardPriceTable: 'Varejo',
     discountLevels: [
-      { id: '1', label: 'Gerência', maxDiscount: 20, color: '#10b981' }, // Green
-      { id: '2', label: 'Supervisão', maxDiscount: 15, color: '#3b82f6' }, // Blue
-      { id: '3', label: 'Vendedor Pleno', maxDiscount: 10, color: '#f59e0b' }, // Amber
-      { id: '4', label: 'Balcão', maxDiscount: 5, color: '#ef4444' }, // Red
+      { id: '1', label: 'Gerência', maxDiscount: 20, color: '#10b981' }, 
+      { id: '2', label: 'Supervisão', maxDiscount: 15, color: '#3b82f6' }, 
+      { id: '3', label: 'Vendedor Pleno', maxDiscount: 10, color: '#f59e0b' }, 
+      { id: '4', label: 'Balcão', maxDiscount: 5, color: '#ef4444' }, 
     ],
     documentSequences: {
       workOrder: { prefix: 'OS-', nextNumber: 1026 },
@@ -74,366 +75,27 @@ const INITIAL_STATE: AppState = {
   costCenters: [
     { id: '1', name: 'Aluguel', type: 'Fixo', description: 'Aluguel da sede principal' },
     { id: '2', name: 'Energia Elétrica', type: 'Variável', description: 'Conta de luz mensal' },
-    { id: '3', name: 'Fornecedores Peças', type: 'Variável', description: 'Compra de estoque' },
-    { id: '4', name: 'Salários Administrativos', type: 'Fixo', description: 'Folha de pagamento fixa' },
   ],
   paymentMethods: [
     { id: '1', name: 'Dinheiro', type: 'Dinheiro', feePercentage: 0 },
     { id: '2', name: 'Pix', type: 'Pix', feePercentage: 0 },
-    { id: '3', name: 'Cartão de Crédito 1x', type: 'Cartão de Crédito', feePercentage: 3.5 },
-    { id: '4', name: 'Cartão de Crédito Parcelado', type: 'Cartão de Crédito', feePercentage: 5.0 },
-    { id: '5', name: 'Cartão de Débito', type: 'Cartão de Débito', feePercentage: 1.5 },
-    { id: '6', name: 'Entrada em Dinheiro', type: 'Entrada', feePercentage: 0 },
   ],
   contractTemplates: [
     {
       id: 'TPL-001',
       name: 'Contrato Padrão de Serviços',
-      content: `
-      <div style="font-family: 'Times New Roman', serif; line-height: 1.6; color: #1a1a1a;">
-        <h2 style="text-align: center; text-transform: uppercase; margin-bottom: 40px; font-size: 18px; border-bottom: 2px solid #000; padding-bottom: 10px;">Contrato de Prestação de Serviços e Venda de Produtos</h2>
-        
-        <p style="text-align: justify;"><strong>CONTRATANTE:</strong> {CLIENTE}, inscrito(a) no CPF/CNPJ sob nº {DOC_CLIENTE}, residente e domiciliado(a) em {ENDERECO_CLIENTE}.</p>
-        
-        <p style="text-align: justify;"><strong>CONTRATADA:</strong> {EMPRESA}, pessoa jurídica de direito privado, inscrita no CNPJ sob nº {CNPJ_EMPRESA}, sediada em {ENDERECO_EMPRESA}.</p>
-        
-        <p style="text-align: justify;">As partes acima identificadas têm, entre si, justo e acertado o presente Contrato, que se regerá pelas cláusulas seguintes:</p>
-        
-        <h4 style="margin-top: 20px; font-size: 14px; text-transform: uppercase;">1. DO OBJETO</h4>
-        <p style="text-align: justify;">Cláusula 1ª. O presente contrato tem como objeto a venda de produtos e/ou prestação de serviços descritos no Orçamento nº <strong>{ID_ORCAMENTO}</strong>, conforme detalhamento abaixo:</p>
-        
-        <div style="margin: 20px 0;">
-          {LISTA_ITENS}
-        </div>
-
-        <h4 style="margin-top: 20px; font-size: 14px; text-transform: uppercase;">2. DO VALOR E FORMA DE PAGAMENTO</h4>
-        <p style="text-align: justify;">Cláusula 2ª. O CONTRATANTE pagará à CONTRATADA o valor total de <strong>R$ {VALOR_TOTAL}</strong>.</p>
-        <p style="text-align: justify;">Parágrafo único. O pagamento será efetuado conforme acordado no orçamento aprovado.</p>
-
-        <h4 style="margin-top: 20px; font-size: 14px; text-transform: uppercase;">3. DO PRAZO</h4>
-        <p style="text-align: justify;">Cláusula 3ª. Os serviços ou entrega dos produtos serão realizados até a data de <strong>{DATA_VALIDADE}</strong>, salvo motivos de força maior alheios à vontade da CONTRATADA.</p>
-
-        <h4 style="margin-top: 20px; font-size: 14px; text-transform: uppercase;">4. DA GARANTIA</h4>
-        <p style="text-align: justify;">Cláusula 4ª. A garantia dos serviços e produtos segue as normas do Código de Defesa do Consumidor (90 dias para bens duráveis).</p>
-
-        <h4 style="margin-top: 20px; font-size: 14px; text-transform: uppercase;">5. DO FORO</h4>
-        <p style="text-align: justify;">Cláusula 5ª. Para dirimir quaisquer controvérsias oriundas do CONTRATO, as partes elegem o foro da comarca de {CIDADE_EMPRESA}.</p>
-
-        <br/><br/>
-        <p style="text-align: center;">{DATA_EXTENSO}.</p>
-        
-        <br/><br/><br/><br/>
-        <div style="display: flex; justify-content: space-between; gap: 40px;">
-           <div style="flex: 1; text-align: center; border-top: 1px solid #000; padding-top: 10px;">
-              <strong>{EMPRESA}</strong><br/>
-              CONTRATADA
-           </div>
-           <div style="flex: 1; text-align: center; border-top: 1px solid #000; padding-top: 10px;">
-              <strong>{CLIENTE}</strong><br/>
-              CONTRATANTE
-           </div>
-        </div>
-      </div>`
-    },
-    {
-      id: 'TPL-002',
-      name: 'Termo de Garantia Simplificado',
-      content: `
-      <div style="font-family: Arial, sans-serif; padding: 20px; border: 2px double #333;">
-        <h1 style="text-align: center; color: #b91c1c;">TERMO DE GARANTIA</h1>
-        
-        <p>A empresa <strong>{EMPRESA}</strong> assegura ao cliente <strong>{CLIENTE}</strong> a garantia sobre os produtos e serviços listados abaixo, referentes ao Orçamento <strong>#{ID_ORCAMENTO}</strong>.</p>
-        
-        <hr/>
-        {LISTA_ITENS}
-        <hr/>
-
-        <h3>Condições de Validade:</h3>
-        <ul>
-          <li>A garantia é válida por 90 dias a partir de <strong>{DATA_HOJE}</strong>.</li>
-          <li>Não cobre danos causados por mau uso, acidentes ou desgaste natural.</li>
-          <li>A apresentação deste termo é obrigatória para solicitação de reparos.</li>
-        </ul>
-
-        <p style="margin-top: 30px; text-align: center; font-style: italic;">{CIDADE_EMPRESA}, {DATA_EXTENSO}.</p>
-      </div>
-      `
+      content: '...'
     }
   ],
-  products: [
-    { 
-      id: 'PRD-001', 
-      name: 'Óleo de Motor 5W30', 
-      category: 'Óleos', 
-      brand: 'Castrol', 
-      model: 'Magnatec', 
-      ncm: '2710.19.32', 
-      price: 45.00, 
-      cost: 22.50, 
-      profitMargin: 100, 
-      stock: 12, 
-      minStock: 20,
-      warrantyDays: 90,
-      images: ['https://images.unsplash.com/photo-1648242283559-4c6a044b9c8d?q=80&w=2574&auto=format&fit=crop'],
-      showInStore: true
-    },
-    { 
-      id: 'PRD-002', 
-      name: 'Filtro de Ar Universal', 
-      category: 'Peças', 
-      brand: 'Fram', 
-      model: 'CA1029', 
-      price: 35.00, 
-      cost: 10.00, 
-      profitMargin: 250, 
-      stock: 50, 
-      minStock: 10,
-      warrantyDays: 90,
-      images: ['https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=2832&auto=format&fit=crop'],
-      showInStore: true
-    },
-    { 
-      id: 'PRD-003', 
-      name: 'Pastilha de Freio', 
-      category: 'Peças', 
-      brand: 'Bosch', 
-      model: 'Cerâmica', 
-      price: 120.00, 
-      cost: 60.00, 
-      profitMargin: 100, 
-      stock: 4, 
-      minStock: 8,
-      warrantyDays: 180,
-      images: [],
-      showInStore: false
-    },
-    { 
-      id: 'PRD-004', 
-      name: 'Lâmpada LED H4', 
-      category: 'Acessórios', 
-      brand: 'Philips', 
-      model: 'Ultinon', 
-      price: 80.00, 
-      cost: 40.00, 
-      profitMargin: 100, 
-      stock: 30, 
-      minStock: 10,
-      warrantyDays: 365,
-      images: ['https://images.unsplash.com/photo-1612831661881-5d3410b536a2?q=80&w=2787&auto=format&fit=crop'],
-      showInStore: true
-    },
-  ],
-  workOrders: [
-    { 
-      id: 'OS-1023', 
-      clientId: 'CLI-001', 
-      clientName: 'Roberto Almeida', 
-      description: 'Troca de óleo e revisão de freios', 
-      status: OSTatus.IN_PROGRESS, 
-      dateCreated: '2023-10-25', 
-      dateStart: '2023-10-26',
-      totalValue: 250.00, 
-      laborValue: 100.00,
-      priority: 'Alta', 
-      technician: 'João Mecânico',
-      paymentStatus: 'Pendente',
-      products: [
-        { productId: 'PRD-001', productName: 'Óleo de Motor 5W30', quantity: 3, unitPrice: 45.00, total: 135.00 }
-      ]
-    },
-    { 
-      id: 'OS-1024', 
-      clientId: 'CLI-002', 
-      clientName: 'Ana Clara Silva', 
-      description: 'Instalação de som automotivo', 
-      status: OSTatus.PENDING, 
-      dateCreated: '2023-10-26', 
-      totalValue: 500.00, 
-      laborValue: 500.00,
-      priority: 'Média', 
-      technician: '',
-      paymentStatus: 'Pendente',
-      products: []
-    },
-    { 
-      id: 'OS-1025', 
-      clientId: 'CLI-001', 
-      clientName: 'Roberto Almeida', 
-      description: 'Manutenção preventiva frota', 
-      status: OSTatus.COMPLETED, 
-      dateCreated: '2023-10-20', 
-      dateStart: '2023-10-21',
-      dateEnd: '2023-10-22',
-      totalValue: 1200.00, 
-      laborValue: 800.00,
-      priority: 'Média', 
-      technician: 'Pedro Elétrica',
-      paymentStatus: 'Pago',
-      products: []
-    },
-  ],
-  transactions: [
-    { id: 'TR-1', description: 'Pagamento OS-1025', amount: 1200.00, type: TransactionType.INCOME, date: '2023-10-20', category: 'Serviços' },
-    { id: 'TR-2', description: 'Compra de Peças Fornecedor A', amount: 450.00, type: TransactionType.EXPENSE, date: '2023-10-22', category: 'Fornecedores' },
-    { id: 'TR-3', description: 'Conta de Energia', amount: 280.00, type: TransactionType.EXPENSE, date: '2023-10-25', category: 'Contas' },
-    { id: 'TR-4', description: 'Venda Balcão - Óleo', amount: 90.00, type: TransactionType.INCOME, date: '2023-10-26', category: 'Vendas' },
-  ],
-  clients: [
-    { 
-      id: 'CLI-001', 
-      name: 'Roberto Almeida', 
-      type: 'Cliente',
-      cpf: '123.456.789-00', 
-      rg: '12.345.678-9',
-      phone: '(11) 99999-8888',
-      email: 'roberto@email.com',
-      password: '123456', // Demo password
-      blocked: false,
-      maritalStatus: 'Casado(a)',
-      address: {
-        cep: '01001-000',
-        rua: 'Praça da Sé',
-        endereco: 'Praça da Sé, 100',
-        bairro: 'Sé',
-        cidade: 'São Paulo',
-        uf: 'SP',
-        complemento: 'Lado ímpar'
-      }
-    },
-    { 
-      id: 'FOR-001', 
-      type: 'Fornecedor',
-      razaoSocial: 'Auto Peças Distribuidora Ltda',
-      cnpj: '12.345.678/0001-90',
-      email: 'vendas@autop.com.br',
-      companyPhone: '(11) 3333-4444',
-      sellerContact: 'Carlos Santos',
-      blocked: false,
-      address: {
-        cep: '02002-000',
-        rua: 'Rua Voluntários da Pátria',
-        endereco: 'Rua Voluntários da Pátria, 500',
-        bairro: 'Santana',
-        cidade: 'São Paulo',
-        uf: 'SP',
-        complemento: 'Galpão 3'
-      }
-    }
-  ],
-  employees: [
-    {
-      id: 'EMP-001',
-      name: 'João Silva',
-      cpf: '111.222.333-44',
-      role: 'Mecânico Chefe',
-      salary: 3500.00,
-      advances: 500.00,
-      username: 'joao.silva',
-      email: 'joao@nexus.com',
-      password: '123456',
-      address: {
-        cep: '01002-000',
-        rua: 'Rua das Flores',
-        cidade: 'São Paulo',
-        bairro: 'Centro',
-        endereco: 'Rua das Flores, 20',
-        complemento: '',
-        uf: 'SP'
-      }
-    }
-  ],
-  clientPurchases: [
-    {
-      id: 'PUR-1',
-      clientId: 'CLI-001',
-      productName: 'Bateria Moura 60Ah',
-      purchaseDate: '2023-08-15',
-      warrantyExpireDate: '2024-08-15',
-      paymentMethod: 'Cartão de Crédito',
-      paymentStatus: 'Pago',
-      value: 450.00
-    },
-    {
-      id: 'PUR-2',
-      clientId: 'CLI-001',
-      productName: 'Pneu Pirelli Aro 14',
-      purchaseDate: '2023-01-10',
-      warrantyExpireDate: '2028-01-10',
-      paymentMethod: 'Boleto',
-      paymentStatus: 'Pago',
-      value: 380.00
-    },
-     {
-      id: 'PUR-3',
-      clientId: 'CLI-001',
-      productName: 'Kit Revisão Completo',
-      purchaseDate: '2023-10-25',
-      warrantyExpireDate: '2024-01-25',
-      paymentMethod: 'Pix',
-      paymentStatus: 'Pendente',
-      value: 120.00
-    }
-  ],
-  checklists: [
-    {
-      id: 'CHK-001',
-      title: 'Revisão Padrão 10.000km',
-      description: 'Checklist para veículos leves em revisão periódica.',
-      dateCreated: '2023-10-01',
-      items: [
-        { id: '1', text: 'Verificar nível de óleo', completed: false },
-        { id: '2', text: 'Checar pressão dos pneus', completed: false },
-        { id: '3', text: 'Verificar sistema de freios', completed: false },
-        { id: '4', text: 'Testar luzes e faróis', completed: false }
-      ],
-      photos: [],
-      parts: [
-        { productId: 'PRD-001', quantity: 1 },
-        { productId: 'PRD-002', quantity: 1 }
-      ]
-    }
-  ],
-  sales: [
-    {
-      id: 'VEN-001',
-      clientId: 'CLI-001',
-      clientName: 'Roberto Almeida',
-      date: '2023-10-26',
-      status: 'Concluída',
-      paymentMethod: 'Pix',
-      totalValue: 90.00,
-      items: [
-        { productId: 'PRD-001', productName: 'Óleo de Motor 5W30', quantity: 2, unitPrice: 45.00, total: 90.00 }
-      ]
-    },
-    // Mock purchase for employee
-    {
-      id: 'VEN-002',
-      clientId: 'EMP-001',
-      clientName: 'João Silva',
-      date: '2023-10-27',
-      status: 'Concluída',
-      paymentMethod: 'Dinheiro',
-      totalValue: 45.00,
-      items: [
-        { productId: 'PRD-001', productName: 'Óleo de Motor 5W30', quantity: 1, unitPrice: 45.00, total: 45.00 }
-      ]
-    }
-  ],
-  quotes: [
-    {
-      id: 'ORC-001',
-      clientId: 'CLI-002',
-      clientName: 'Ana Clara Silva',
-      date: '2023-10-28',
-      expireDate: '2023-11-04',
-      status: 'Aberto',
-      totalValue: 120.00,
-      items: [
-        { productId: 'PRD-003', productName: 'Pastilha de Freio', quantity: 1, unitPrice: 120.00, total: 120.00 }
-      ]
-    }
-  ],
+  products: [],
+  workOrders: [],
+  transactions: [],
+  clients: [],
+  employees: [],
+  clientPurchases: [],
+  checklists: [],
+  sales: [],
+  quotes: [],
   contracts: []
 };
 
@@ -448,6 +110,40 @@ const App: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [state, setState] = useState<AppState>(INITIAL_STATE);
   const [quoteForContract, setQuoteForContract] = useState<Quote | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [dbStatus, setDbStatus] = useState<'connected' | 'disconnected'>('disconnected');
+
+  // Load Data from API (Neon DB)
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch('/api/state');
+        if (response.ok) {
+          const dbData = await response.json();
+          // Merge fetched data with initial state structure to ensure all keys exist
+          setState(prev => ({
+            ...prev,
+            ...dbData,
+            // Fallback for objects if DB returns null (empty tables)
+            companySettings: dbData.companySettings || prev.companySettings,
+            storeSettings: dbData.storeSettings || prev.storeSettings,
+          }));
+          setDbStatus('connected');
+        } else {
+          console.warn("API not reachable, using local mock data.");
+          setDbStatus('disconnected');
+        }
+      } catch (error) {
+        console.error("Failed to connect to backend:", error);
+        setDbStatus('disconnected');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Authentication Handlers
   const handleLoginSuccess = (type: 'admin' | 'client' | 'employee', userData?: Client | Employee) => {
@@ -467,6 +163,8 @@ const App: React.FC = () => {
   };
 
   // State Handlers (Admin)
+  // Note: In a full implementation, these would fetch('/api/...') to save to DB.
+  // For this version, we update local state after initial load.
   const handleAddProduct = (product: Product) => {
     setState(prev => ({ ...prev, products: [...prev.products, product] }));
   };
@@ -487,19 +185,13 @@ const App: React.FC = () => {
 
   const handleBatchOperations = (productsToAdd: Product[], productsToUpdate: Product[]) => {
     setState(prev => {
-      // Create a map of existing products for faster lookup during update
       const productMap = new Map(prev.products.map(p => [p.id, p]));
-      
-      // Update existing ones in the map
       productsToUpdate.forEach(updated => {
         if (productMap.has(updated.id)) {
           productMap.set(updated.id, updated);
         }
       });
-
-      // Convert back to array
       const updatedExistingList = Array.from(productMap.values());
-
       return { 
         ...prev, 
         products: [...updatedExistingList, ...productsToAdd] 
@@ -511,7 +203,6 @@ const App: React.FC = () => {
     let finalOrder = order;
     let newSettings = { ...state.companySettings };
 
-    // Generate ID if not provided (new order)
     if (!order.id) {
         const seq = newSettings.documentSequences.workOrder;
         finalOrder = { ...order, id: `${seq.prefix}${seq.nextNumber}` };
@@ -561,7 +252,6 @@ const App: React.FC = () => {
     }));
   };
 
-  // Employee Handlers
   const handleAddEmployee = (employee: Employee) => {
     setState(prev => ({ ...prev, employees: [...prev.employees, employee] }));
   };
@@ -580,7 +270,6 @@ const App: React.FC = () => {
     }));
   };
 
-  // Checklist Handlers
   const handleAddChecklist = (checklist: Checklist) => {
     setState(prev => ({ ...prev, checklists: [...prev.checklists, checklist] }));
   };
@@ -599,7 +288,6 @@ const App: React.FC = () => {
     }));
   };
 
-  // Sales & Quotes Handlers
   const handleAddSale = (sale: Sale) => {
     let finalSale = sale;
     let newSettings = { ...state.companySettings };
@@ -614,7 +302,6 @@ const App: React.FC = () => {
       ...prev, 
       sales: [finalSale, ...prev.sales],
       companySettings: newSettings,
-      // Optional: Add transaction automatically
       transactions: [
         {
           id: `TR-${Date.now()}`,
@@ -653,7 +340,6 @@ const App: React.FC = () => {
     }));
   };
 
-  // Contract Handlers
   const handleGenerateContract = (quote: Quote) => {
     setQuoteForContract(quote);
     setActiveTab('contracts');
@@ -671,7 +357,6 @@ const App: React.FC = () => {
     setState(prev => ({ ...prev, contracts: prev.contracts.filter(c => c.id !== id) }));
   };
 
-  // Template Handlers
   const handleAddTemplate = (template: ContractTemplate) => {
     setState(prev => ({ ...prev, contractTemplates: [...prev.contractTemplates, template] }));
   };
@@ -690,12 +375,10 @@ const App: React.FC = () => {
     }));
   };
 
-  // Settings Handler
   const handleUpdateSettings = (newSettings: CompanySettings) => {
     setState(prev => ({ ...prev, companySettings: newSettings }));
   };
 
-  // Margin & Cost Center & Payment Methods Handlers
   const handleUpdateMarginRule = (rule: MarginRule) => {
     setState(prev => ({
       ...prev,
@@ -735,6 +418,29 @@ const App: React.FC = () => {
   const handleDeletePaymentMethod = (id: string) => {
     setState(prev => ({ ...prev, paymentMethods: prev.paymentMethods.filter(m => m.id !== id) }));
   };
+
+  // Setup Database Button (Admin only)
+  const handleSetupDb = async () => {
+    if(confirm("Isso criará as tabelas no banco de dados Neon. Deseja continuar?")) {
+      try {
+        const res = await fetch('/api/setup');
+        const msg = await res.json();
+        alert(msg.message || msg.error);
+        if(res.ok) window.location.reload();
+      } catch (e) {
+        alert("Erro ao conectar.");
+      }
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white flex-col gap-4">
+        <div className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="animate-pulse">Conectando ao banco de dados...</p>
+      </div>
+    );
+  }
 
   // 1. If not authenticated, show Login
   if (!authState.isAuthenticated) {
@@ -812,6 +518,15 @@ const App: React.FC = () => {
         </nav>
 
         <div className="p-4 border-t border-white/5 bg-slate-900/20">
+          <div className="flex items-center gap-2 mb-4 px-2">
+             <div className={`w-2 h-2 rounded-full ${dbStatus === 'connected' ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+             <span className="text-xs text-slate-400">{dbStatus === 'connected' ? 'DB Conectado' : 'Modo Offline'}</span>
+             {dbStatus === 'disconnected' && (
+                <button onClick={handleSetupDb} className="ml-auto text-xs text-blue-400 hover:underline" title="Configurar Tabelas">
+                   <Database size={12} /> Setup
+                </button>
+             )}
+          </div>
           <button 
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 border border-transparent transition-colors font-medium mb-4"
@@ -819,11 +534,6 @@ const App: React.FC = () => {
             <LogOut size={20} />
             <span>Sair</span>
           </button>
-          
-          <div className="bg-gradient-to-br from-blue-900/30 to-slate-900/30 p-4 rounded-xl border border-white/5">
-            <p className="text-xs font-semibold text-cyan-400 uppercase mb-1">Dica Pro</p>
-            <p className="text-xs text-slate-400">Use o consultor IA no painel para insights diários.</p>
-          </div>
         </div>
       </aside>
 
@@ -919,7 +629,7 @@ const App: React.FC = () => {
                 onAddSale={handleAddSale}
                 onAddQuote={handleAddQuote}
                 onUpdateQuoteStatus={handleUpdateQuoteStatus}
-                paymentMethods={state.paymentMethods} // Passed to Sales
+                paymentMethods={state.paymentMethods} 
                 onGenerateContract={handleGenerateContract}
               />
             )}
@@ -931,7 +641,7 @@ const App: React.FC = () => {
                 onAddOrder={handleAddOrder}
                 onUpdateOrder={handleUpdateOrder}
                 onAddTransaction={handleAddTransaction}
-                paymentMethods={state.paymentMethods} // Passed to WorkOrders
+                paymentMethods={state.paymentMethods} 
               />
             )}
             {activeTab === 'checklists' && (
@@ -955,15 +665,15 @@ const App: React.FC = () => {
             {activeTab === 'contracts' && (
               <Contracts 
                 contracts={state.contracts}
-                contractTemplates={state.contractTemplates} // New Prop
+                contractTemplates={state.contractTemplates} 
                 quotes={state.quotes}
                 clients={state.clients}
                 companySettings={state.companySettings}
                 onAddContract={handleAddContract}
                 onDeleteContract={handleDeleteContract}
-                onAddTemplate={handleAddTemplate} // New Handler
-                onUpdateTemplate={handleUpdateTemplate} // New Handler
-                onDeleteTemplate={handleDeleteTemplate} // New Handler
+                onAddTemplate={handleAddTemplate} 
+                onUpdateTemplate={handleUpdateTemplate} 
+                onDeleteTemplate={handleDeleteTemplate} 
                 initialQuote={quoteForContract}
                 onClearInitialQuote={handleClearQuoteForContract}
               />
