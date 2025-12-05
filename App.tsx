@@ -113,9 +113,29 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [dbStatus, setDbStatus] = useState<'connected' | 'disconnected'>('disconnected');
 
+  // Check for persistent session on mount
+  useEffect(() => {
+    const savedSession = localStorage.getItem('nexus_session');
+    if (savedSession) {
+      try {
+        const parsedSession = JSON.parse(savedSession);
+        setAuthState({
+          isAuthenticated: true,
+          userType: parsedSession.userType,
+          user: parsedSession.user
+        });
+      } catch (e) {
+        console.error("Erro ao restaurar sessão:", e);
+        localStorage.removeItem('nexus_session');
+      }
+    }
+  }, []);
+
   // Load Data from API (Neon DB)
   useEffect(() => {
     const fetchData = async () => {
+      // Only fetch data if we are authenticated or checking authentication isn't blocking (optional optimization)
+      // Here we fetch always to have data ready
       setIsLoading(true);
       try {
         const response = await fetch('/api/state');
@@ -163,11 +183,14 @@ const App: React.FC = () => {
 
   // Authentication Handlers
   const handleLoginSuccess = (type: 'admin' | 'client' | 'employee', userData?: Client | Employee) => {
-    setAuthState({
+    const newAuthState = {
       isAuthenticated: true,
       userType: type,
       user: userData || null
-    });
+    };
+    setAuthState(newAuthState);
+    // Save to localStorage
+    localStorage.setItem('nexus_session', JSON.stringify({ userType: type, user: userData || null }));
   };
 
   const handleLogout = () => {
@@ -176,6 +199,8 @@ const App: React.FC = () => {
       userType: null,
       user: null
     });
+    // Clear localStorage
+    localStorage.removeItem('nexus_session');
   };
 
   // State Handlers (Admin)
