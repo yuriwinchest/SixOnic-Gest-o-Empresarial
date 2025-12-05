@@ -247,14 +247,39 @@ const Inventory: React.FC<InventoryProps> = ({ products, onAddProduct, onUpdateP
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.name && formData.price !== undefined) {
-      if (editingId) {
-        onUpdateProduct({ ...formData as Product, id: editingId });
-      } else {
-        onAddProduct({ ...formData as Product, id: `PROD-${Date.now()}` });
-      }
-      setIsModalOpen(false);
+
+    // Validations
+    if (!formData.name || !formData.name.trim()) {
+      alert("O nome do produto é obrigatório.");
+      return;
     }
+
+    if (!formData.category || !formData.category.trim()) {
+      alert("A categoria do produto é obrigatória.");
+      return;
+    }
+
+    if (formData.cost === undefined || formData.cost <= 0) {
+      alert("O custo deve ser um número positivo.");
+      return;
+    }
+
+    if (formData.price === undefined || formData.price <= 0) {
+      alert("O preço de venda deve ser um número positivo.");
+      return;
+    }
+
+    if (formData.stock === undefined || formData.stock === null) {
+      alert("O estoque é obrigatório.");
+      return;
+    }
+
+    if (editingId) {
+      onUpdateProduct({ ...formData as Product, id: editingId });
+    } else {
+      onAddProduct({ ...formData as Product, id: `PROD-${Date.now()}` });
+    }
+    setIsModalOpen(false);
   };
 
   const handleStockSubmit = (e: React.FormEvent) => {
@@ -398,7 +423,7 @@ const Inventory: React.FC<InventoryProps> = ({ products, onAddProduct, onUpdateP
                                      <span className="text-slate-500">SKU/ID (Arquivo)</span>
                                      <span className="font-mono text-slate-600">{candidate.importedProduct.id}</span>
                                   </div>
-                               </div>
+                                </div>
                             </td>
 
                             {/* SYSTEM COMPARISON */}
@@ -685,7 +710,7 @@ const Inventory: React.FC<InventoryProps> = ({ products, onAddProduct, onUpdateP
                  {/* Left Column - Basic Info */}
                  <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">Nome do Produto</label>
+                      <label className="block text-sm font-medium text-slate-700 mb-1">Nome do Produto *</label>
                       <input 
                         required
                         type="text" 
@@ -721,7 +746,7 @@ const Inventory: React.FC<InventoryProps> = ({ products, onAddProduct, onUpdateP
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Categoria</label>
+                        <label className="block text-sm font-medium text-slate-700 mb-1">Categoria *</label>
                         <input 
                           required
                           type="text" 
@@ -800,7 +825,7 @@ const Inventory: React.FC<InventoryProps> = ({ products, onAddProduct, onUpdateP
                 </h4>
                 <div className="grid grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Custo (R$)</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Custo (R$) *</label>
                     <input 
                       required
                       type="number" 
@@ -825,7 +850,7 @@ const Inventory: React.FC<InventoryProps> = ({ products, onAddProduct, onUpdateP
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Venda (R$)</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Venda (R$) *</label>
                     <input 
                       required
                       type="number" 
@@ -840,7 +865,7 @@ const Inventory: React.FC<InventoryProps> = ({ products, onAddProduct, onUpdateP
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Estoque Atual</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Estoque Atual *</label>
                   <input 
                     required
                     type="number" 
