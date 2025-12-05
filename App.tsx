@@ -777,30 +777,30 @@ const App: React.FC = () => {
         setActiveTab(tab);
         setIsMobileMenuOpen(false);
       }}
-      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium
+      className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium border
         ${activeTab === tab 
-          ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' 
-          : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'}`}
+          ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.2)]' 
+          : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border-transparent'}`}
     >
-      <Icon size={20} />
+      <Icon size={20} className={activeTab === tab ? "text-cyan-400" : "text-slate-400"} />
       <span>{label}</span>
     </button>
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 flex font-sans">
+    <div className="min-h-screen bg-transparent flex font-sans">
       {/* Sidebar Desktop */}
-      <aside className="hidden lg:flex flex-col w-64 bg-white border-r border-slate-200 fixed h-full z-10 print:hidden">
-        <div className="p-6 border-b border-slate-100 flex items-center gap-2">
-          <div className="bg-indigo-600 p-2 rounded-lg">
+      <aside className="hidden lg:flex flex-col w-64 bg-slate-900/40 backdrop-blur-xl border-r border-white/5 fixed h-full z-10 print:hidden">
+        <div className="p-6 border-b border-white/5 flex items-center gap-2">
+          <div className="bg-gradient-to-tr from-cyan-600 to-blue-600 p-2 rounded-lg shadow-lg shadow-blue-500/20">
             <Package className="text-white" size={24} />
           </div>
-          <h1 className="text-xl font-bold text-slate-800 tracking-tight">Nexus<span className="text-indigo-600">Gestão</span></h1>
+          <h1 className="text-xl font-bold text-slate-100 tracking-tight">Nexus<span className="text-cyan-400">Gestão</span></h1>
         </div>
         
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar">
           <NavItem tab="dashboard" icon={LayoutDashboard} label="Dashboard" />
-          <NavItem tab="clients" icon={Users} label="Clientes/Fornecedores" />
+          <NavItem tab="clients" icon={Users} label="Clientes" />
           <NavItem tab="employees" icon={Briefcase} label="Funcionários" />
           <NavItem tab="sales" icon={ShoppingCart} label="Vendas" />
           <NavItem tab="os" icon={ClipboardList} label="Ordens de Serviço" />
@@ -811,45 +811,45 @@ const App: React.FC = () => {
           <NavItem tab="settings" icon={SettingsIcon} label="Configurações" />
         </nav>
 
-        <div className="p-4 border-t border-slate-100">
+        <div className="p-4 border-t border-white/5 bg-slate-900/20">
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors font-medium mb-4"
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 border border-transparent transition-colors font-medium mb-4"
           >
             <LogOut size={20} />
             <span>Sair</span>
           </button>
           
-          <div className="bg-gradient-to-br from-indigo-50 to-slate-50 p-4 rounded-xl border border-indigo-100">
-            <p className="text-xs font-semibold text-indigo-600 uppercase mb-1">Dica Pro</p>
-            <p className="text-sm text-slate-600">Use o consultor IA no painel para insights diários.</p>
+          <div className="bg-gradient-to-br from-blue-900/30 to-slate-900/30 p-4 rounded-xl border border-white/5">
+            <p className="text-xs font-semibold text-cyan-400 uppercase mb-1">Dica Pro</p>
+            <p className="text-xs text-slate-400">Use o consultor IA no painel para insights diários.</p>
           </div>
         </div>
       </aside>
 
       {/* Mobile Header & Overlay */}
       <div className="lg:pl-64 flex-1 flex flex-col min-h-screen">
-        <header className="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-20 shadow-sm print:hidden">
+        <header className="bg-slate-900/40 backdrop-blur-md border-b border-white/5 h-16 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-20 shadow-sm print:hidden">
           <div className="flex items-center gap-3 lg:hidden">
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg"
+              className="p-2 text-slate-400 hover:bg-slate-800 rounded-lg"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-            <span className="font-bold text-slate-800">Nexus</span>
+            <span className="font-bold text-slate-100">Nexus</span>
           </div>
 
-          <div className="hidden lg:block text-slate-500 text-sm">
+          <div className="hidden lg:block text-slate-400 text-sm">
              {new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </div>
 
           <div className="flex items-center gap-4">
-            <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors relative">
+            <button className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-full transition-colors relative">
               <Bell size={20} />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-slate-900"></span>
             </button>
-            <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-600 flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-blue-500/20">
               AD
             </div>
           </div>
@@ -858,16 +858,16 @@ const App: React.FC = () => {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="fixed inset-0 z-40 lg:hidden print:hidden">
-            <div className="fixed inset-0 bg-black/50" onClick={() => setIsMobileMenuOpen(false)}></div>
-            <nav className="fixed top-0 left-0 bottom-0 w-64 bg-white p-4 space-y-2 shadow-xl animate-slide-in">
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)}></div>
+            <nav className="fixed top-0 left-0 bottom-0 w-64 bg-slate-900 border-r border-white/10 p-4 space-y-2 shadow-2xl animate-slide-in">
               <div className="mb-8 flex items-center gap-2 px-2">
-                 <div className="bg-indigo-600 p-2 rounded-lg">
+                 <div className="bg-blue-600 p-2 rounded-lg">
                   <Package className="text-white" size={20} />
                 </div>
-                <h1 className="text-xl font-bold text-slate-800">Nexus</h1>
+                <h1 className="text-xl font-bold text-slate-100">Nexus</h1>
               </div>
               <NavItem tab="dashboard" icon={LayoutDashboard} label="Dashboard" />
-              <NavItem tab="clients" icon={Users} label="Clientes/Fornecedores" />
+              <NavItem tab="clients" icon={Users} label="Clientes" />
               <NavItem tab="employees" icon={Briefcase} label="Funcionários" />
               <NavItem tab="sales" icon={ShoppingCart} label="Vendas" />
               <NavItem tab="os" icon={ClipboardList} label="Ordens de Serviço" />
@@ -876,10 +876,10 @@ const App: React.FC = () => {
               <NavItem tab="contracts" icon={FileCheck} label="Contratos" />
               <NavItem tab="finance" icon={DollarSign} label="Financeiro" />
               <NavItem tab="settings" icon={SettingsIcon} label="Configurações" />
-              <div className="pt-4 mt-auto border-t border-slate-100">
+              <div className="pt-4 mt-auto border-t border-white/10">
                 <button 
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors font-medium"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors font-medium"
                 >
                   <LogOut size={20} />
                   <span>Sair</span>

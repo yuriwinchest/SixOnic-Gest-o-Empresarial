@@ -108,73 +108,71 @@ const Sales: React.FC<SalesProps> = ({ sales, quotes, products, clients, payment
     setFormExpireDate('');
     setFormPaymentMethod('');
   };
-
-  const selectedPaymentMethod = paymentMethods.find(m => m.name === formPaymentMethod);
-
+  
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">
+          <h2 className="text-2xl font-bold text-slate-100">
             {activeTab === 'sales' ? 'Gestão de Vendas' : 'Orçamentos'}
           </h2>
-          <p className="text-slate-500">
+          <p className="text-slate-400">
             {activeTab === 'sales' ? 'Histórico de vendas e faturamento.' : 'Gerencie propostas comerciais.'}
           </p>
         </div>
         <div className="flex gap-2">
-            <div className="flex bg-white rounded-lg border border-slate-200 p-1">
+            <div className="flex bg-slate-800/50 rounded-lg border border-white/10 p-1">
               <button 
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded ${viewMode === 'list' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`p-2 rounded ${viewMode === 'list' ? 'bg-indigo-500/20 text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`}
               >
                 <LayoutList size={20} />
               </button>
               <button 
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-indigo-500/20 text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`}
               >
                 <LayoutGrid size={20} />
               </button>
             </div>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-lg shadow-indigo-900/20 border border-white/10"
           >
             <Plus size={20} /> {activeTab === 'sales' ? 'Nova Venda' : 'Novo Orçamento'}
           </button>
         </div>
       </div>
 
-      <div className="flex space-x-1 border-b border-slate-200">
+      <div className="flex space-x-1 border-b border-white/10">
         <button
           onClick={() => setActiveTab('sales')}
           className={`px-6 py-3 font-medium text-sm transition-colors relative flex items-center gap-2 ${
-            activeTab === 'sales' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'sales' ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <ShoppingCart size={18} /> Vendas Realizadas
-          {activeTab === 'sales' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></span>}
+          {activeTab === 'sales' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500 rounded-t-full"></span>}
         </button>
         <button
           onClick={() => setActiveTab('quotes')}
           className={`px-6 py-3 font-medium text-sm transition-colors relative flex items-center gap-2 ${
-            activeTab === 'quotes' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'quotes' ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <FileText size={18} /> Orçamentos
-          {activeTab === 'quotes' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></span>}
+          {activeTab === 'quotes' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500 rounded-t-full"></span>}
         </button>
       </div>
 
       {/* Search */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+      <div className="bg-slate-900/60 backdrop-blur-md p-4 rounded-xl shadow-lg border border-white/10">
         <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
           <input 
             type="text" 
             placeholder={activeTab === 'sales' ? "Buscar vendas..." : "Buscar orçamentos..."}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 placeholder-slate-400"
+            className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-100 placeholder-slate-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -183,13 +181,13 @@ const Sales: React.FC<SalesProps> = ({ sales, quotes, products, clients, payment
 
       {/* CONTENT: LIST OR GRID */}
       {filteredData.length === 0 ? (
-         <div className="p-12 text-center text-slate-500 bg-white rounded-xl border border-slate-100">
+         <div className="p-12 text-center text-slate-500 bg-slate-900/60 rounded-xl border border-white/10 backdrop-blur-sm">
           Nenhum registro encontrado.
         </div>
       ) : viewMode === 'list' ? (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="bg-slate-900/60 backdrop-blur-md rounded-xl shadow-lg border border-white/10 overflow-hidden">
           <table className="w-full text-left">
-            <thead className="bg-slate-50 text-slate-600 font-medium text-sm">
+            <thead className="bg-white/5 text-slate-300 font-medium text-sm">
               <tr>
                 <th className="px-6 py-4">ID</th>
                 <th className="px-6 py-4">Cliente</th>
@@ -199,19 +197,19 @@ const Sales: React.FC<SalesProps> = ({ sales, quotes, products, clients, payment
                 {activeTab === 'quotes' && <th className="px-6 py-4 text-right">Ações</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-white/5">
               {filteredData.map((item: any) => (
-                <tr key={item.id} className="hover:bg-slate-50 transition-colors">
+                <tr key={item.id} className="hover:bg-white/5 transition-colors text-slate-300">
                   <td className="px-6 py-4 text-xs font-mono text-slate-500">{item.id}</td>
-                  <td className="px-6 py-4 font-medium text-slate-800">{item.clientName}</td>
-                  <td className="px-6 py-4 text-slate-600 text-sm">
+                  <td className="px-6 py-4 font-medium text-slate-100">{item.clientName}</td>
+                  <td className="px-6 py-4 text-slate-400 text-sm">
                     {new Date(item.date).toLocaleDateString('pt-BR')}
                   </td>
-                  <td className="px-6 py-4 font-bold text-slate-700">R$ {item.totalValue.toFixed(2)}</td>
+                  <td className="px-6 py-4 font-bold text-slate-200">R$ {item.totalValue.toFixed(2)}</td>
                   <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded text-xs font-semibold
-                      ${item.status === 'Concluída' || item.status === 'Aprovado' ? 'bg-emerald-50 text-emerald-700' : 
-                        item.status === 'Pendente' || item.status === 'Aberto' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>
+                    <span className={`px-2 py-1 rounded text-xs font-semibold border
+                      ${item.status === 'Concluída' || item.status === 'Aprovado' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20' : 
+                        item.status === 'Pendente' || item.status === 'Aberto' ? 'bg-amber-500/20 text-amber-400 border-amber-500/20' : 'bg-red-500/20 text-red-400 border-red-500/20'}`}>
                       {item.status}
                     </span>
                   </td>
@@ -222,13 +220,13 @@ const Sales: React.FC<SalesProps> = ({ sales, quotes, products, clients, payment
                            <>
                               <button 
                                 onClick={() => onUpdateQuoteStatus(item.id, 'Aprovado')}
-                                className="p-1 text-emerald-600 hover:bg-emerald-50 rounded" title="Aprovar"
+                                className="p-1 text-emerald-400 hover:bg-emerald-500/20 rounded" title="Aprovar"
                               >
                                 <CheckCircle size={18} />
                               </button>
                               <button 
                                 onClick={() => onUpdateQuoteStatus(item.id, 'Rejeitado')}
-                                className="p-1 text-red-600 hover:bg-red-50 rounded" title="Rejeitar"
+                                className="p-1 text-red-400 hover:bg-red-500/20 rounded" title="Rejeitar"
                               >
                                 <X size={18} />
                               </button>
@@ -237,7 +235,7 @@ const Sales: React.FC<SalesProps> = ({ sales, quotes, products, clients, payment
                          {item.status === 'Aprovado' && (
                             <button 
                               onClick={() => onGenerateContract(item)}
-                              className="p-1 text-indigo-600 hover:bg-indigo-50 rounded" title="Gerar Contrato"
+                              className="p-1 text-indigo-400 hover:bg-indigo-500/20 rounded" title="Gerar Contrato"
                             >
                               <FileCheck size={18} />
                             </button>
@@ -253,245 +251,220 @@ const Sales: React.FC<SalesProps> = ({ sales, quotes, products, clients, payment
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
            {filteredData.map((item: any) => (
-             <div key={item.id} className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between">
+             <div key={item.id} className="bg-slate-900/60 backdrop-blur-md rounded-xl shadow-lg border border-white/10 p-6 flex flex-col justify-between hover:bg-slate-800/40 transition-colors">
                 <div>
                    <div className="flex justify-between items-start mb-4">
-                      <div className="p-3 bg-indigo-50 text-indigo-600 rounded-xl">
+                      <div className="p-3 bg-indigo-500/20 text-indigo-400 rounded-xl">
                         {activeTab === 'sales' ? <ShoppingCart size={24} /> : <FileText size={24} />}
                       </div>
-                      <span className={`px-2 py-1 rounded text-xs font-semibold
-                      ${item.status === 'Concluída' || item.status === 'Aprovado' ? 'bg-emerald-50 text-emerald-700' : 
-                        item.status === 'Pendente' || item.status === 'Aberto' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>
+                      <span className={`px-2 py-1 rounded text-xs font-semibold border
+                      ${item.status === 'Concluída' || item.status === 'Aprovado' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20' : 
+                        item.status === 'Pendente' || item.status === 'Aberto' ? 'bg-amber-500/20 text-amber-400 border-amber-500/20' : 'bg-red-500/20 text-red-400 border-red-500/20'}`}>
                       {item.status}
                     </span>
                    </div>
                    
-                   <h3 className="text-lg font-bold text-slate-800 mb-1">{item.clientName}</h3>
+                   <h3 className="text-lg font-bold text-slate-100 mb-1">{item.clientName}</h3>
                    <p className="text-xs text-slate-500 font-mono mb-4">{item.id}</p>
 
                    <div className="space-y-2 mb-4">
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-500">Data</span>
-                        <span className="text-slate-700">{new Date(item.date).toLocaleDateString('pt-BR')}</span>
+                        <span className="text-slate-400">Data</span>
+                        <span className="text-slate-200">{new Date(item.date).toLocaleDateString('pt-BR')}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-500">Itens</span>
-                        <span className="text-slate-700">{item.items.length} produtos</span>
+                        <span className="text-slate-400">Total</span>
+                        <span className="text-emerald-400 font-bold">R$ {item.totalValue.toFixed(2)}</span>
                       </div>
-                      {activeTab === 'sales' && (
-                        <div className="flex justify-between text-sm">
-                          <span className="text-slate-500">Pagamento</span>
-                          <span className="text-slate-700">{item.paymentMethod}</span>
-                        </div>
-                      )}
-                      {activeTab === 'quotes' && (
-                         <div className="flex justify-between text-sm">
-                          <span className="text-slate-500">Validade</span>
-                          <span className="text-slate-700">{new Date(item.expireDate).toLocaleDateString('pt-BR')}</span>
-                        </div>
-                      )}
                    </div>
-                </div>
 
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                   <span className="text-sm text-slate-500">Total</span>
-                   <span className="text-xl font-bold text-slate-800">R$ {item.totalValue.toFixed(2)}</span>
+                   {activeTab === 'quotes' && (
+                     <div className="flex justify-end gap-2 pt-4 border-t border-white/10">
+                         {item.status === 'Aberto' && (
+                           <>
+                              <button 
+                                onClick={() => onUpdateQuoteStatus(item.id, 'Aprovado')}
+                                className="p-2 text-emerald-400 hover:bg-emerald-500/20 rounded-lg transition-colors" title="Aprovar"
+                              >
+                                <CheckCircle size={18} />
+                              </button>
+                              <button 
+                                onClick={() => onUpdateQuoteStatus(item.id, 'Rejeitado')}
+                                className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors" title="Rejeitar"
+                              >
+                                <X size={18} />
+                              </button>
+                           </>
+                         )}
+                         {item.status === 'Aprovado' && (
+                            <button 
+                              onClick={() => onGenerateContract(item)}
+                              className="p-2 text-indigo-400 hover:bg-indigo-500/20 rounded-lg transition-colors" title="Gerar Contrato"
+                            >
+                              <FileCheck size={18} />
+                            </button>
+                         )}
+                       </div>
+                   )}
                 </div>
-
-                {activeTab === 'quotes' && (
-                  <div className="mt-4 pt-2">
-                    {item.status === 'Aberto' ? (
-                      <div className="flex gap-2">
-                          <button 
-                            onClick={() => onUpdateQuoteStatus(item.id, 'Aprovado')}
-                            className="flex-1 bg-emerald-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-emerald-700"
-                          >
-                            Aprovar
-                          </button>
-                          <button 
-                            onClick={() => onUpdateQuoteStatus(item.id, 'Rejeitado')}
-                            className="flex-1 bg-white border border-red-200 text-red-600 py-2 rounded-lg text-sm font-medium hover:bg-red-50"
-                          >
-                            Rejeitar
-                          </button>
-                      </div>
-                    ) : item.status === 'Aprovado' ? (
-                       <button 
-                          onClick={() => onGenerateContract(item)}
-                          className="w-full bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 flex items-center justify-center gap-2"
-                        >
-                          <FileCheck size={16} /> Gerar Contrato
-                        </button>
-                    ) : null}
-                  </div>
-                )}
              </div>
            ))}
         </div>
       )}
 
-      {/* MODAL */}
+      {/* Modal Form */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-xl shadow-xl max-w-4xl w-full p-6 animate-scale-in my-8">
-             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-slate-800">
-                {activeTab === 'sales' ? 'Nova Venda' : 'Novo Orçamento'}
-              </h3>
-              <button onClick={closeModal} className="text-slate-400 hover:text-slate-600">
-                <X size={24} />
-              </button>
-            </div>
-
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-w-4xl w-full p-6 animate-scale-in my-8">
+            <h3 className="text-xl font-bold text-slate-100 mb-6">
+              {activeTab === 'sales' ? 'Nova Venda' : 'Novo Orçamento'}
+            </h3>
+            
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Cliente</label>
-                  <input 
-                    required
-                    list="clients-list"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900 placeholder-slate-400"
-                    value={formClient}
-                    onChange={e => setFormClient(e.target.value)}
-                    placeholder="Digite o nome do cliente..."
-                  />
-                  <datalist id="clients-list">
-                    {clients.map(c => (
-                      <option key={c.id} value={c.type === 'Cliente' ? c.name : c.razaoSocial} />
-                    ))}
-                  </datalist>
+                   <label className="block text-sm font-medium text-slate-300 mb-1">Cliente</label>
+                   <input 
+                      required
+                      type="text" 
+                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                      value={formClient}
+                      onChange={e => setFormClient(e.target.value)}
+                      list="clients-list"
+                      placeholder="Nome do Cliente"
+                   />
+                   <datalist id="clients-list">
+                      {clients.map(c => (
+                        <option key={c.id} value={c.type === 'Cliente' ? c.name : c.razaoSocial} />
+                      ))}
+                   </datalist>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Data</label>
-                  <input 
-                    required
-                    type="date"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
-                    value={formDate}
-                    onChange={e => setFormDate(e.target.value)}
-                  />
+                   <label className="block text-sm font-medium text-slate-300 mb-1">Data</label>
+                   <input 
+                      required
+                      type="date" 
+                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                      value={formDate}
+                      onChange={e => setFormDate(e.target.value)}
+                   />
                 </div>
-                {activeTab === 'sales' ? (
+                {activeTab === 'quotes' && (
                    <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Forma de Pagamento</label>
-                    <select
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white text-slate-900"
-                      value={formPaymentMethod}
-                      onChange={e => setFormPaymentMethod(e.target.value)}
-                    >
-                      <option value="">Selecione...</option>
-                      {paymentMethods.map(method => (
-                        <option key={method.id} value={method.name}>{method.name}</option>
-                      ))}
-                    </select>
-                    {selectedPaymentMethod && selectedPaymentMethod.feePercentage > 0 && (
-                      <p className="text-xs text-amber-600 mt-1">
-                        Obs: Será aplicada uma taxa de {selectedPaymentMethod.feePercentage}% nesta venda.
-                      </p>
-                    )}
-                  </div>
-                ) : (
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Válido Até</label>
-                    <input 
-                      type="date"
-                      className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
-                      value={formExpireDate}
-                      onChange={e => setFormExpireDate(e.target.value)}
-                    />
-                  </div>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Validade</label>
+                      <input 
+                          type="date" 
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                          value={formExpireDate}
+                          onChange={e => setFormExpireDate(e.target.value)}
+                       />
+                   </div>
+                )}
+                {activeTab === 'sales' && (
+                   <div>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Forma de Pagamento</label>
+                      <select 
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
+                          value={formPaymentMethod}
+                          onChange={e => setFormPaymentMethod(e.target.value)}
+                       >
+                          <option value="">Selecione...</option>
+                          {paymentMethods.map(pm => (
+                             <option key={pm.id} value={pm.name}>{pm.name}</option>
+                          ))}
+                       </select>
+                   </div>
                 )}
               </div>
 
               {/* Items Section */}
-              <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                <h4 className="font-semibold text-slate-700 mb-3 flex items-center gap-2">
-                  <ShoppingCart size={18} /> Produtos
-                </h4>
+              <div className="bg-slate-800/50 p-4 rounded-lg border border-white/5">
+                 <h4 className="font-semibold text-slate-300 mb-3 flex items-center gap-2">
+                    <ShoppingCart size={18} /> Itens
+                 </h4>
 
-                <div className="flex gap-2 mb-4">
+                 <div className="flex gap-2 mb-4">
                     <select 
-                      className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none text-sm bg-white text-slate-900"
-                      value={selectedProduct}
-                      onChange={e => setSelectedProduct(e.target.value)}
+                       className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none text-sm text-white"
+                       value={selectedProduct}
+                       onChange={e => setSelectedProduct(e.target.value)}
                     >
-                      <option value="">Selecione um produto...</option>
-                      {products.map(p => (
-                        <option key={p.id} value={p.id}>{p.name} - R$ {p.price.toFixed(2)}</option>
-                      ))}
+                       <option value="">Adicionar produto...</option>
+                       {products.map(p => (
+                          <option key={p.id} value={p.id}>{p.name} - R$ {p.price.toFixed(2)}</option>
+                       ))}
                     </select>
                     <input 
-                      type="number" 
-                      min="1"
-                      className="w-20 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none text-sm text-slate-900"
-                      value={quantity}
-                      onChange={e => setQuantity(parseInt(e.target.value) || 1)}
+                       type="number" 
+                       min="1"
+                       className="w-20 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:outline-none text-sm text-white"
+                       value={quantity}
+                       onChange={e => setQuantity(parseInt(e.target.value) || 1)}
                     />
                     <button 
-                      type="button"
-                      onClick={handleAddItem}
-                      className="bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+                       type="button"
+                       onClick={handleAddItem}
+                       className="bg-indigo-600 text-white px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
                     >
-                      <Plus size={20} />
+                       <Plus size={20} />
                     </button>
-                </div>
+                 </div>
 
-                <div className="bg-white rounded border border-slate-200 overflow-hidden">
-                   <table className="w-full text-sm text-left">
-                     <thead className="bg-slate-50 text-slate-600">
-                       <tr>
-                         <th className="px-4 py-2">Produto</th>
-                         <th className="px-4 py-2 text-center">Qtd</th>
-                         <th className="px-4 py-2 text-right">Unit.</th>
-                         <th className="px-4 py-2 text-right">Total</th>
-                         <th className="px-4 py-2"></th>
-                       </tr>
-                     </thead>
-                     <tbody className="divide-y divide-slate-100">
-                       {formItems.map((item, idx) => (
-                         <tr key={idx}>
-                           <td className="px-4 py-2 text-slate-700">{item.productName}</td>
-                           <td className="px-4 py-2 text-center text-slate-700">{item.quantity}</td>
-                           <td className="px-4 py-2 text-right text-slate-700">R$ {item.unitPrice.toFixed(2)}</td>
-                           <td className="px-4 py-2 text-right font-medium text-slate-700">R$ {item.total.toFixed(2)}</td>
-                           <td className="px-4 py-2 text-right">
-                             <button type="button" onClick={() => handleRemoveItem(item.productId)} className="text-red-500 hover:text-red-700">
-                               <Trash2 size={16} />
-                             </button>
-                           </td>
-                         </tr>
-                       ))}
-                       {formItems.length === 0 && (
-                         <tr>
-                           <td colSpan={5} className="px-4 py-8 text-center text-slate-400">Nenhum produto adicionado.</td>
-                         </tr>
-                       )}
-                     </tbody>
-                   </table>
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center pt-4 border-t border-slate-100">
-                 <div className="text-right ml-auto">
-                    <p className="text-sm text-slate-500">Valor Total</p>
-                    <p className="text-2xl font-bold text-slate-800">R$ {totalValue.toFixed(2)}</p>
+                 <div className="max-h-60 overflow-y-auto">
+                    {formItems.length === 0 ? (
+                       <p className="text-sm text-slate-500 text-center py-4">Nenhum item adicionado.</p>
+                    ) : (
+                       <table className="w-full text-sm text-left">
+                          <thead className="text-slate-400 border-b border-white/10">
+                             <tr>
+                                <th className="pb-2">Produto</th>
+                                <th className="pb-2 text-center">Qtd</th>
+                                <th className="pb-2 text-right">Total</th>
+                                <th className="pb-2"></th>
+                             </tr>
+                          </thead>
+                          <tbody className="divide-y divide-white/10">
+                             {formItems.map((item, idx) => (
+                                <tr key={idx} className="text-slate-300">
+                                   <td className="py-2">{item.productName}</td>
+                                   <td className="py-2 text-center">{item.quantity}</td>
+                                   <td className="py-2 text-right">R$ {item.total.toFixed(2)}</td>
+                                   <td className="py-2 text-right">
+                                      <button 
+                                         type="button" 
+                                         onClick={() => handleRemoveItem(item.productId)}
+                                         className="text-red-400 hover:text-red-300"
+                                      >
+                                         <Trash2 size={14} />
+                                      </button>
+                                   </td>
+                                </tr>
+                             ))}
+                          </tbody>
+                       </table>
+                    )}
+                 </div>
+                 
+                 <div className="mt-4 pt-4 border-t border-white/10 flex justify-end items-center gap-4">
+                    <span className="text-slate-400">Total Geral:</span>
+                    <span className="text-2xl font-bold text-emerald-400">R$ {totalValue.toFixed(2)}</span>
                  </div>
               </div>
 
-              <div className="flex justify-end gap-3">
+              <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
                 <button 
                   type="button"
                   onClick={closeModal}
-                  className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-medium"
+                  className="px-4 py-2 text-slate-400 hover:bg-slate-800 rounded-lg font-medium transition-colors"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
                   disabled={formItems.length === 0 || !formClient}
-                  className="px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-900/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Confirmar {activeTab === 'sales' ? 'Venda' : 'Orçamento'}
+                  {activeTab === 'sales' ? 'Finalizar Venda' : 'Salvar Orçamento'}
                 </button>
               </div>
             </form>

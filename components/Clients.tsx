@@ -165,61 +165,61 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Clientes e Fornecedores</h2>
-          <p className="text-slate-500">Gerencie sua base de contatos.</p>
+          <h2 className="text-2xl font-bold text-slate-100">Clientes e Fornecedores</h2>
+          <p className="text-slate-400">Gerencie sua base de contatos.</p>
         </div>
         <div className="flex gap-2">
-           <div className="flex bg-white rounded-lg border border-slate-200 p-1">
+           <div className="flex bg-slate-800/50 rounded-lg border border-white/10 p-1">
               <button 
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded ${viewMode === 'list' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`p-2 rounded ${viewMode === 'list' ? 'bg-indigo-500/20 text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`}
               >
                 <LayoutList size={20} />
               </button>
               <button 
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-indigo-50 text-indigo-600' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`p-2 rounded ${viewMode === 'grid' ? 'bg-indigo-500/20 text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`}
               >
                 <LayoutGrid size={20} />
               </button>
             </div>
           <button 
             onClick={handleOpenAdd}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-lg shadow-indigo-900/20 border border-white/10"
           >
             <Plus size={20} /> Novo {activeTab}
           </button>
         </div>
       </div>
 
-      <div className="flex space-x-1 border-b border-slate-200">
+      <div className="flex space-x-1 border-b border-white/10">
         <button
           onClick={() => setActiveTab('Cliente')}
           className={`px-6 py-3 font-medium text-sm transition-colors relative ${
-            activeTab === 'Cliente' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'Cliente' ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           Clientes Pessoas Físicas
-          {activeTab === 'Cliente' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></span>}
+          {activeTab === 'Cliente' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500 rounded-t-full"></span>}
         </button>
         <button
           onClick={() => setActiveTab('Fornecedor')}
           className={`px-6 py-3 font-medium text-sm transition-colors relative ${
-            activeTab === 'Fornecedor' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'Fornecedor' ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           Fornecedores / Empresas
-          {activeTab === 'Fornecedor' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></span>}
+          {activeTab === 'Fornecedor' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500 rounded-t-full"></span>}
         </button>
       </div>
 
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-100">
+      <div className="bg-slate-900/60 backdrop-blur-md p-4 rounded-xl shadow-lg border border-white/10">
         <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={20} />
           <input 
             type="text" 
             placeholder={`Buscar por nome, CPF/CNPJ ou cidade...`}
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-900 placeholder-slate-400"
+            className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-100 placeholder-slate-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -227,10 +227,10 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
       </div>
 
       {viewMode === 'list' ? (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="bg-slate-900/60 backdrop-blur-md rounded-xl shadow-lg border border-white/10 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-slate-50 text-slate-600 font-medium text-sm">
+              <thead className="bg-white/5 text-slate-300 font-medium text-sm">
                 <tr>
                   <th className="px-6 py-4">Nome / Razão Social</th>
                   <th className="px-6 py-4">Documento</th>
@@ -239,32 +239,32 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                   <th className="px-6 py-4 text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-white/5">
                 {filteredClients.map(client => (
-                  <tr key={client.id} className={`hover:bg-slate-50 transition-colors ${client.blocked ? 'bg-red-50' : ''}`}>
+                  <tr key={client.id} className={`hover:bg-white/5 transition-colors ${client.blocked ? 'bg-red-500/10' : ''} text-slate-300`}>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${client.type === 'Cliente' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'}`}>
+                        <div className={`p-2 rounded-lg ${client.type === 'Cliente' ? 'bg-blue-500/20 text-blue-400' : 'bg-amber-500/20 text-amber-400'}`}>
                           {client.type === 'Cliente' ? <User size={20} /> : <Building2 size={20} />}
                         </div>
                         <div>
-                          <p className={`font-medium ${client.blocked ? 'text-red-700' : 'text-slate-800'}`}>
+                          <p className={`font-medium ${client.blocked ? 'text-red-400' : 'text-slate-100'}`}>
                             {client.type === 'Cliente' ? client.name : client.razaoSocial}
                           </p>
                           <p className="text-xs text-slate-500">{client.email || 'Sem email'}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 font-mono text-sm">
+                    <td className="px-6 py-4 text-slate-400 font-mono text-sm">
                       {client.type === 'Cliente' ? client.cpf : client.cnpj}
                     </td>
-                    <td className="px-6 py-4 text-slate-600">
+                    <td className="px-6 py-4 text-slate-400">
                       <div className="flex flex-col text-sm">
                         <span>{client.type === 'Cliente' ? client.phone : client.companyPhone}</span>
-                        {client.type === 'Fornecedor' && <span className="text-xs text-slate-400">Vend: {client.sellerContact}</span>}
+                        {client.type === 'Fornecedor' && <span className="text-xs text-slate-500">Vend: {client.sellerContact}</span>}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 text-sm">
+                    <td className="px-6 py-4 text-slate-400 text-sm">
                       {client.address.cidade} - {client.address.uf}
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -272,7 +272,7 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                          {onBlockClient && (
                           <button 
                             onClick={() => onBlockClient(client.id, !client.blocked)}
-                            className={`p-1 transition-colors ${client.blocked ? 'text-red-600 hover:text-red-800' : 'text-slate-400 hover:text-slate-600'}`}
+                            className={`p-1 transition-colors ${client.blocked ? 'text-red-400 hover:text-red-300' : 'text-slate-500 hover:text-slate-300'}`}
                             title={client.blocked ? "Desbloquear" : "Bloquear"}
                           >
                             {client.blocked ? <Ban size={18} /> : <Unlock size={18} />}
@@ -280,14 +280,14 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                         )}
                         <button 
                           onClick={() => handleOpenEdit(client)}
-                          className="p-1 text-slate-400 hover:text-indigo-600 transition-colors"
+                          className="p-1 text-slate-500 hover:text-indigo-400 transition-colors"
                           title="Editar"
                         >
                           <Edit2 size={18} />
                         </button>
                         <button 
                           onClick={() => onDeleteClient(client.id)}
-                          className="p-1 text-slate-400 hover:text-red-600 transition-colors"
+                          className="p-1 text-slate-500 hover:text-red-400 transition-colors"
                           title="Excluir"
                         >
                           <Trash2 size={18} />
@@ -303,16 +303,16 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredClients.map(client => (
-            <div key={client.id} className={`bg-white rounded-xl shadow-sm border p-6 flex flex-col justify-between hover:shadow-md transition-shadow ${client.blocked ? 'border-red-200 bg-red-50' : 'border-slate-100'}`}>
+            <div key={client.id} className={`bg-slate-900/60 backdrop-blur-md rounded-xl shadow-lg border p-6 flex flex-col justify-between hover:bg-slate-800/40 transition-colors ${client.blocked ? 'border-red-500/30 bg-red-500/10' : 'border-white/10'}`}>
                <div>
                   <div className="flex justify-between items-start mb-4">
-                    <div className={`p-3 rounded-xl ${client.type === 'Cliente' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'}`}>
+                    <div className={`p-3 rounded-xl ${client.type === 'Cliente' ? 'bg-blue-500/20 text-blue-400' : 'bg-amber-500/20 text-amber-400'}`}>
                       {client.type === 'Cliente' ? <User size={24} /> : <Building2 size={24} />}
                     </div>
-                    {client.blocked && <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-bold rounded">BLOQUEADO</span>}
+                    {client.blocked && <span className="px-2 py-1 bg-red-500/20 text-red-400 text-xs font-bold rounded border border-red-500/30">BLOQUEADO</span>}
                   </div>
                   
-                  <h3 className="text-lg font-bold text-slate-800 mb-1 truncate">
+                  <h3 className="text-lg font-bold text-slate-100 mb-1 truncate">
                      {client.type === 'Cliente' ? client.name : client.razaoSocial}
                   </h3>
                    <div className="flex items-center gap-2 mb-4 text-xs text-slate-500 font-mono">
@@ -321,39 +321,39 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                    </div>
 
                   <div className="space-y-2 mb-4">
-                     <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <Phone size={14} className="text-slate-400" />
+                     <div className="flex items-center gap-2 text-sm text-slate-400">
+                        <Phone size={14} className="text-slate-500" />
                         <span>{client.type === 'Cliente' ? client.phone : client.companyPhone}</span>
                      </div>
-                     <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <Mail size={14} className="text-slate-400" />
+                     <div className="flex items-center gap-2 text-sm text-slate-400">
+                        <Mail size={14} className="text-slate-500" />
                         <span className="truncate">{client.email || 'N/A'}</span>
                      </div>
-                     <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <MapPin size={14} className="text-slate-400" />
+                     <div className="flex items-center gap-2 text-sm text-slate-400">
+                        <MapPin size={14} className="text-slate-500" />
                         <span className="truncate">{client.address.cidade} - {client.address.uf}</span>
                      </div>
                   </div>
                </div>
 
-               <div className="flex justify-end gap-2 pt-4 border-t border-slate-100/50">
+               <div className="flex justify-end gap-2 pt-4 border-t border-white/10">
                     {onBlockClient && (
                       <button 
                         onClick={() => onBlockClient(client.id, !client.blocked)}
-                        className={`p-2 rounded-lg transition-colors ${client.blocked ? 'bg-red-100 text-red-700' : 'hover:bg-slate-50 text-slate-500'}`}
+                        className={`p-2 rounded-lg transition-colors ${client.blocked ? 'bg-red-500/20 text-red-400 hover:bg-red-500/30' : 'hover:bg-white/5 text-slate-400 hover:text-slate-200'}`}
                       >
                          {client.blocked ? <Ban size={18} /> : <Unlock size={18} />}
                       </button>
                     )}
                    <button 
                       onClick={() => handleOpenEdit(client)}
-                      className="p-2 hover:bg-slate-50 text-slate-500 rounded-lg transition-colors"
+                      className="p-2 hover:bg-white/5 text-slate-400 hover:text-slate-200 rounded-lg transition-colors"
                     >
                       <Edit2 size={18} />
                     </button>
                     <button 
                       onClick={() => onDeleteClient(client.id)}
-                      className="p-2 hover:bg-red-50 text-slate-500 hover:text-red-600 rounded-lg transition-colors"
+                      className="p-2 hover:bg-red-500/10 text-slate-400 hover:text-red-400 rounded-lg transition-colors"
                     >
                       <Trash2 size={18} />
                     </button>
@@ -365,9 +365,9 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
 
       {/* Modal Form */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full p-6 animate-scale-in my-8">
-            <h3 className="text-xl font-bold text-slate-800 mb-6">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-w-2xl w-full p-6 animate-scale-in my-8">
+            <h3 className="text-xl font-bold text-slate-100 mb-6">
               {editingId ? 'Editar' : 'Novo'} {activeTab}
             </h3>
             
@@ -377,39 +377,39 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                 {activeTab === 'Cliente' ? (
                   <>
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-slate-700 mb-1">Nome Completo</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Nome Completo</label>
                       <input 
                         required
                         type="text" 
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                         value={formData.name || ''}
                         onChange={e => setFormData({...formData, name: e.target.value})}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">CPF</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">CPF</label>
                       <input 
                         required
                         type="text" 
                         placeholder="000.000.000-00"
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                         value={formData.cpf || ''}
                         onChange={e => setFormData({...formData, cpf: e.target.value})}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">RG</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">RG</label>
                       <input 
                         type="text" 
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                         value={formData.rg || ''}
                         onChange={e => setFormData({...formData, rg: e.target.value})}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">Estado Civil</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Estado Civil</label>
                       <select
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                         value={formData.maritalStatus || 'Solteiro(a)'}
                         onChange={e => setFormData({...formData, maritalStatus: e.target.value as any})}
                       >
@@ -421,10 +421,10 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">Celular/WhatsApp</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Celular/WhatsApp</label>
                       <input 
                         type="text" 
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                         value={formData.phone || ''}
                         onChange={e => setFormData({...formData, phone: e.target.value})}
                       />
@@ -433,21 +433,21 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                 ) : (
                   <>
                      <div className="md:col-span-2">
-                       <label className="block text-sm font-medium text-slate-700 mb-1">Razão Social</label>
+                       <label className="block text-sm font-medium text-slate-300 mb-1">Razão Social</label>
                         <input 
                           required
                           type="text" 
-                          className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                           value={formData.razaoSocial || ''}
                           onChange={e => setFormData({...formData, razaoSocial: e.target.value})}
                         />
                      </div>
                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">CNPJ</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">CNPJ</label>
                         <input 
                           required
                           type="text" 
-                          className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                           value={formData.cnpj || ''}
                           onChange={e => setFormData({...formData, cnpj: e.target.value})}
                           onBlur={handleCnpjBlur}
@@ -455,19 +455,19 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                         />
                      </div>
                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Telefone Empresa</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">Telefone Empresa</label>
                         <input 
                           type="text" 
-                          className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                           value={formData.companyPhone || ''}
                           onChange={e => setFormData({...formData, companyPhone: e.target.value})}
                         />
                      </div>
                      <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">Contato Vendedor</label>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">Contato Vendedor</label>
                         <input 
                           type="text" 
-                          className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                           value={formData.sellerContact || ''}
                           onChange={e => setFormData({...formData, sellerContact: e.target.value})}
                         />
@@ -477,10 +477,10 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                 
                 {/* Common Fields */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
                   <input 
                     type="email" 
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                     value={formData.email || ''}
                     onChange={e => setFormData({...formData, email: e.target.value})}
                   />
@@ -488,65 +488,65 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
               </div>
 
               {/* Address Section */}
-              <div className="border-t border-slate-100 pt-4">
-                <h4 className="font-medium text-slate-800 mb-3 flex items-center gap-2">
-                  <MapPin size={18} className="text-slate-400" /> Endereço
+              <div className="border-t border-white/10 pt-4">
+                <h4 className="font-medium text-slate-300 mb-3 flex items-center gap-2">
+                  <MapPin size={18} className="text-slate-500" /> Endereço
                 </h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">CEP</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">CEP</label>
                       <div className="relative">
                         <input 
                           type="text" 
-                          className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                           value={formData.address?.cep || ''}
                           onChange={e => setFormData({...formData, address: {...formData.address!, cep: e.target.value}})}
                           onBlur={handleCepBlur}
                         />
-                        {loadingAddress && <div className="absolute right-3 top-2.5 w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>}
+                        {loadingAddress && <div className="absolute right-3 top-2.5 w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>}
                       </div>
                    </div>
                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-slate-700 mb-1">Endereço</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Endereço</label>
                       <input 
                         type="text" 
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white bg-slate-800/50"
                         value={formData.address?.endereco || ''}
                         readOnly
                       />
                    </div>
                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">Bairro</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Bairro</label>
                       <input 
                         type="text" 
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white bg-slate-800/50"
                         value={formData.address?.bairro || ''}
                         readOnly
                       />
                    </div>
                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">Cidade</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Cidade</label>
                       <input 
                         type="text" 
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white bg-slate-800/50"
                         value={formData.address?.cidade || ''}
                         readOnly
                       />
                    </div>
                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-1">UF</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">UF</label>
                       <input 
                         type="text" 
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-slate-50 text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white bg-slate-800/50"
                         value={formData.address?.uf || ''}
                         readOnly
                       />
                    </div>
                     <div className="md:col-span-3">
-                      <label className="block text-sm font-medium text-slate-700 mb-1">Complemento</label>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Complemento</label>
                       <input 
                         type="text" 
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                         value={formData.address?.complemento || ''}
                         onChange={e => setFormData({...formData, address: {...formData.address!, complemento: e.target.value}})}
                       />
@@ -558,13 +558,13 @@ const Clients: React.FC<ClientsProps> = ({ clients, onAddClient, onUpdateClient,
                 <button 
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-medium"
+                  className="px-4 py-2 text-slate-400 hover:bg-slate-800 rounded-lg font-medium transition-colors"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-900/20"
                 >
                   Salvar
                 </button>

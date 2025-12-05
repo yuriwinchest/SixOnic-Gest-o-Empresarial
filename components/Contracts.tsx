@@ -3,7 +3,7 @@ import {
   FileCheck, Plus, Search, Printer, Trash2, Eye, X, Save, PenTool, FileText, 
   Upload, FileType, Settings, Bold, Italic, Underline, AlignLeft, AlignCenter, 
   AlignRight, AlignJustify, List, ListOrdered, Type, Variable, Undo, Redo, 
-  Palette, Highlighter, Minus 
+  Palette, Highlighter, Minus, Download 
 } from 'lucide-react';
 import { Contract, Quote, Client, CompanySettings, ContractTemplate } from '../types';
 
@@ -309,11 +309,17 @@ const Contracts: React.FC<ContractsProps> = ({
       #contract-preview-container {
         position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0;
         background: white; display: flex; justify-content: center;
+        min-height: 100vh;
       }
       #contract-preview {
-        width: 210mm; box-shadow: none !important; padding: 20mm !important; margin: 0 !important;
+        width: 210mm; /* A4 Width */
+        min-height: 297mm; /* A4 Height */
+        padding: 20mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        border: none !important;
       }
-      @page { size: auto; margin: 0mm; }
+      @page { size: A4; margin: 0; }
     }
   `;
 
@@ -525,9 +531,16 @@ const Contracts: React.FC<ContractsProps> = ({
 
               <button 
                 onClick={handlePrint}
+                className="bg-red-600 hover:bg-red-700 text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 shadow-sm"
+              >
+                <Download size={20} /> Baixar PDF
+              </button>
+              
+              <button 
+                onClick={handlePrint}
                 className="bg-slate-800 hover:bg-slate-900 text-white px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 shadow-sm"
               >
-                <Printer size={20} /> Imprimir / PDF
+                <Printer size={20} /> Imprimir
               </button>
 
               <div className="bg-amber-50 border border-amber-100 p-4 rounded-lg text-amber-800 text-sm">

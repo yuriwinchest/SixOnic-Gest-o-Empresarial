@@ -154,13 +154,13 @@ const Finance: React.FC<FinanceProps> = ({
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800">Financeiro</h2>
-          <p className="text-slate-500">Controle de receitas, despesas e custos.</p>
+          <h2 className="text-2xl font-bold text-slate-100">Financeiro</h2>
+          <p className="text-slate-400">Controle de receitas, despesas e custos.</p>
         </div>
         {activeTab === 'cashflow' && (
           <button 
             onClick={() => setIsTransactionModalOpen(true)}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-lg shadow-indigo-900/20"
           >
             <Plus size={20} /> Nova Transação
           </button>
@@ -168,7 +168,7 @@ const Finance: React.FC<FinanceProps> = ({
         {activeTab === 'costs' && (
           <button 
             onClick={() => openCostCenterModal()}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-lg shadow-indigo-900/20"
           >
             <Plus size={20} /> Novo Centro de Custo
           </button>
@@ -176,7 +176,7 @@ const Finance: React.FC<FinanceProps> = ({
         {activeTab === 'payments' && (
           <button 
             onClick={() => openPaymentMethodModal()}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-sm"
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors shadow-lg shadow-indigo-900/20"
           >
             <Plus size={20} /> Nova Forma de Pagamento
           </button>
@@ -184,42 +184,42 @@ const Finance: React.FC<FinanceProps> = ({
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-1 border-b border-slate-200 overflow-x-auto">
+      <div className="flex space-x-1 border-b border-white/10 overflow-x-auto">
         <button
           onClick={() => setActiveTab('cashflow')}
           className={`px-6 py-3 font-medium text-sm transition-colors relative flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'cashflow' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'cashflow' ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <PieChart size={18} /> Fluxo de Caixa
-          {activeTab === 'cashflow' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></span>}
+          {activeTab === 'cashflow' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500 rounded-t-full"></span>}
         </button>
         <button
           onClick={() => setActiveTab('margins')}
           className={`px-6 py-3 font-medium text-sm transition-colors relative flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'margins' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'margins' ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <Percent size={18} /> Margens
-          {activeTab === 'margins' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></span>}
+          {activeTab === 'margins' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500 rounded-t-full"></span>}
         </button>
         <button
           onClick={() => setActiveTab('costs')}
           className={`px-6 py-3 font-medium text-sm transition-colors relative flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'costs' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'costs' ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <Layers size={18} /> Centros de Custo
-          {activeTab === 'costs' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></span>}
+          {activeTab === 'costs' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500 rounded-t-full"></span>}
         </button>
         <button
           onClick={() => setActiveTab('payments')}
           className={`px-6 py-3 font-medium text-sm transition-colors relative flex items-center gap-2 whitespace-nowrap ${
-            activeTab === 'payments' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'
+            activeTab === 'payments' ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <CreditCard size={18} /> Formas de Pagamento
-          {activeTab === 'payments' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-600 rounded-t-full"></span>}
+          {activeTab === 'payments' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-indigo-500 rounded-t-full"></span>}
         </button>
       </div>
 
@@ -227,38 +227,38 @@ const Finance: React.FC<FinanceProps> = ({
       {activeTab === 'cashflow' && (
         <div className="animate-fade-in space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-emerald-500 text-white p-6 rounded-xl shadow-sm">
+            <div className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 p-6 rounded-xl shadow-lg backdrop-blur-md">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-emerald-100 font-medium">Entradas</span>
+                <span className="text-emerald-300 font-medium">Entradas</span>
                 <ArrowUpCircle className="opacity-80" />
               </div>
               <span className="text-2xl font-bold">R$ {income.toFixed(2)}</span>
             </div>
-            <div className="bg-red-500 text-white p-6 rounded-xl shadow-sm">
+            <div className="bg-red-500/20 border border-red-500/30 text-red-400 p-6 rounded-xl shadow-lg backdrop-blur-md">
                <div className="flex justify-between items-center mb-2">
-                <span className="text-red-100 font-medium">Saídas</span>
+                <span className="text-red-300 font-medium">Saídas</span>
                 <ArrowDownCircle className="opacity-80" />
               </div>
               <span className="text-2xl font-bold">R$ {expense.toFixed(2)}</span>
             </div>
-            <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm">
+            <div className="bg-slate-900/60 border border-white/10 text-white p-6 rounded-xl shadow-lg backdrop-blur-md">
                <div className="flex justify-between items-center mb-2">
-                <span className="text-slate-500 font-medium">Saldo Líquido</span>
-                <span className="text-xs px-2 py-1 bg-slate-100 rounded text-slate-600">Este Mês</span>
+                <span className="text-slate-400 font-medium">Saldo Líquido</span>
+                <span className="text-xs px-2 py-1 bg-white/10 rounded text-slate-300">Este Mês</span>
               </div>
-              <span className={`text-2xl font-bold ${income - expense >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+              <span className={`text-2xl font-bold ${income - expense >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
                 R$ {(income - expense).toFixed(2)}
               </span>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-            <div className="p-4 border-b border-slate-100 font-semibold text-slate-700">
+          <div className="bg-slate-900/60 backdrop-blur-md rounded-xl shadow-lg border border-white/10 overflow-hidden">
+            <div className="p-4 border-b border-white/10 font-semibold text-slate-300">
               Últimas Transações
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-600 font-medium text-sm">
+                <thead className="bg-white/5 text-slate-300 font-medium text-sm">
                   <tr>
                     <th className="px-6 py-4">Data</th>
                     <th className="px-6 py-4">Descrição</th>
@@ -267,26 +267,26 @@ const Finance: React.FC<FinanceProps> = ({
                     <th className="px-6 py-4 text-right">Valor</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-white/10">
                   {transactions.slice().reverse().map(transaction => (
-                    <tr key={transaction.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="px-6 py-4 text-slate-600 text-sm">
+                    <tr key={transaction.id} className="hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4 text-slate-400 text-sm">
                         {new Date(transaction.date).toLocaleDateString('pt-BR')}
                       </td>
-                      <td className="px-6 py-4 font-medium text-slate-800">{transaction.description}</td>
-                      <td className="px-6 py-4 text-slate-500 text-sm">
-                        <span className="bg-slate-100 px-2 py-1 rounded text-xs">{transaction.category}</span>
+                      <td className="px-6 py-4 font-medium text-slate-200">{transaction.description}</td>
+                      <td className="px-6 py-4 text-slate-400 text-sm">
+                        <span className="bg-white/10 px-2 py-1 rounded text-xs">{transaction.category}</span>
                       </td>
                       <td className="px-6 py-4">
                         <span className={`flex items-center gap-1 text-sm font-medium ${
-                          transaction.type === TransactionType.INCOME ? 'text-emerald-600' : 'text-red-600'
+                          transaction.type === TransactionType.INCOME ? 'text-emerald-400' : 'text-red-400'
                         }`}>
                           {transaction.type === TransactionType.INCOME ? <ArrowUpCircle size={14}/> : <ArrowDownCircle size={14}/>}
                           {transaction.type}
                         </span>
                       </td>
                       <td className={`px-6 py-4 text-right font-bold ${
-                        transaction.type === TransactionType.INCOME ? 'text-emerald-600' : 'text-red-600'
+                        transaction.type === TransactionType.INCOME ? 'text-emerald-400' : 'text-red-400'
                       }`}>
                         {transaction.type === TransactionType.INCOME ? '+' : '-'} R$ {transaction.amount.toFixed(2)}
                       </td>
@@ -302,55 +302,55 @@ const Finance: React.FC<FinanceProps> = ({
       {/* MARGINS TAB */}
       {activeTab === 'margins' && (
         <div className="animate-fade-in max-w-4xl mx-auto">
-           <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-              <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                 <Target size={20} className="text-indigo-600" /> Definição de Margens de Lucro
+           <div className="bg-slate-900/60 backdrop-blur-md rounded-xl shadow-lg border border-white/10 p-6">
+              <h3 className="text-lg font-bold text-slate-100 mb-4 flex items-center gap-2">
+                 <Target size={20} className="text-indigo-400" /> Definição de Margens de Lucro
               </h3>
-              <p className="text-slate-500 mb-6 text-sm">
+              <p className="text-slate-400 mb-6 text-sm">
                  Defina as margens padrão aplicadas aos preços de custo dos produtos para venda no Varejo e Atacado.
               </p>
 
-              <div className="overflow-hidden rounded-lg border border-slate-200">
+              <div className="overflow-hidden rounded-lg border border-white/10">
                  <table className="w-full text-left">
-                    <thead className="bg-slate-50 text-slate-600 font-medium text-sm">
+                    <thead className="bg-white/5 text-slate-300 font-medium text-sm">
                        <tr>
                           <th className="px-6 py-4">Tipo de Venda</th>
                           <th className="px-6 py-4 text-right">Margem (%)</th>
                           <th className="px-6 py-4 text-right">Ação</th>
                        </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-white/10">
                        {marginRules.map(rule => (
-                          <tr key={rule.id} className="hover:bg-slate-50">
-                             <td className="px-6 py-4 font-medium text-slate-800">{rule.name}</td>
+                          <tr key={rule.id} className="hover:bg-white/5">
+                             <td className="px-6 py-4 font-medium text-slate-200">{rule.name}</td>
                              <td className="px-6 py-4 text-right">
                                 {editingMarginId === rule.id ? (
                                    <div className="flex justify-end items-center gap-1">
                                       <input 
                                         type="number" 
-                                        className="w-20 px-2 py-1 border border-slate-300 rounded text-right focus:outline-none focus:border-indigo-500 text-slate-900"
+                                        className="w-20 px-2 py-1 bg-slate-800 border border-slate-600 rounded text-right focus:outline-none focus:border-indigo-500 text-white"
                                         value={marginValue}
                                         onChange={e => setMarginValue(e.target.value)}
                                         autoFocus
                                       />
-                                      <span className="text-slate-500">%</span>
+                                      <span className="text-slate-400">%</span>
                                    </div>
                                 ) : (
-                                   <span className="text-slate-700 font-bold">{rule.percentage}%</span>
+                                   <span className="text-slate-200 font-bold">{rule.percentage}%</span>
                                 )}
                              </td>
                              <td className="px-6 py-4 text-right">
                                 {editingMarginId === rule.id ? (
                                    <button 
                                       onClick={() => saveMargin(rule)}
-                                      className="bg-emerald-50 text-emerald-600 px-3 py-1 rounded text-xs font-medium hover:bg-emerald-100 border border-emerald-200"
+                                      className="bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded text-xs font-medium hover:bg-emerald-500/30 border border-emerald-500/30"
                                    >
                                       Salvar
                                    </button>
                                 ) : (
                                    <button 
                                       onClick={() => startEditingMargin(rule)}
-                                      className="p-1 text-slate-400 hover:text-indigo-600"
+                                      className="p-1 text-slate-400 hover:text-indigo-400"
                                       title="Editar"
                                    >
                                       <Edit2 size={18} />
@@ -371,30 +371,30 @@ const Finance: React.FC<FinanceProps> = ({
         <div className="animate-fade-in">
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {costCenters.map(cc => (
-                 <div key={cc.id} className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+                 <div key={cc.id} className="bg-slate-900/60 backdrop-blur-md rounded-xl shadow-lg border border-white/10 p-6 flex flex-col justify-between hover:bg-slate-800/40 transition-colors">
                     <div>
                        <div className="flex justify-between items-start mb-4">
-                          <div className={`p-2 rounded-lg ${cc.type === 'Fixo' ? 'bg-blue-50 text-blue-600' : 'bg-amber-50 text-amber-600'}`}>
+                          <div className={`p-2 rounded-lg ${cc.type === 'Fixo' ? 'bg-blue-500/20 text-blue-400' : 'bg-amber-500/20 text-amber-400'}`}>
                              <Layers size={20} />
                           </div>
-                          <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-wider ${cc.type === 'Fixo' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}>
+                          <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-wider ${cc.type === 'Fixo' ? 'bg-blue-500/10 text-blue-300' : 'bg-amber-500/10 text-amber-300'}`}>
                              {cc.type}
                           </span>
                        </div>
-                       <h3 className="font-bold text-slate-800 text-lg mb-2">{cc.name}</h3>
-                       <p className="text-sm text-slate-500 mb-4">{cc.description || 'Sem descrição'}</p>
+                       <h3 className="font-bold text-slate-100 text-lg mb-2">{cc.name}</h3>
+                       <p className="text-sm text-slate-400 mb-4">{cc.description || 'Sem descrição'}</p>
                     </div>
                     
-                    <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
+                    <div className="flex justify-end gap-2 pt-4 border-t border-white/10">
                        <button 
                           onClick={() => openCostCenterModal(cc)}
-                          className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-colors"
                        >
                           <Edit2 size={18} />
                        </button>
                        <button 
                           onClick={() => onDeleteCostCenter(cc.id)}
-                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                        >
                           <Trash2 size={18} />
                        </button>
@@ -404,7 +404,7 @@ const Finance: React.FC<FinanceProps> = ({
            </div>
            
            {costCenters.length === 0 && (
-              <div className="p-12 text-center text-slate-500 bg-white rounded-xl border border-slate-100">
+              <div className="p-12 text-center text-slate-500 bg-slate-900/60 rounded-xl border border-white/10 backdrop-blur-sm">
                  Nenhum centro de custo cadastrado.
               </div>
            )}
@@ -414,17 +414,17 @@ const Finance: React.FC<FinanceProps> = ({
       {/* PAYMENT METHODS TAB */}
       {activeTab === 'payments' && (
         <div className="animate-fade-in max-w-5xl mx-auto">
-           <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
-              <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                 <CreditCard size={20} className="text-indigo-600" /> Cadastro de Formas de Pagamento
+           <div className="bg-slate-900/60 backdrop-blur-md rounded-xl shadow-lg border border-white/10 p-6">
+              <h3 className="text-lg font-bold text-slate-100 mb-4 flex items-center gap-2">
+                 <CreditCard size={20} className="text-indigo-400" /> Cadastro de Formas de Pagamento
               </h3>
-              <p className="text-slate-500 mb-6 text-sm">
+              <p className="text-slate-400 mb-6 text-sm">
                  Gerencie as formas de pagamento aceitas e as taxas aplicadas para cada uma. Isso afetará os cálculos de vendas.
               </p>
 
-              <div className="overflow-hidden rounded-lg border border-slate-200">
+              <div className="overflow-hidden rounded-lg border border-white/10">
                  <table className="w-full text-left">
-                    <thead className="bg-slate-50 text-slate-600 font-medium text-sm">
+                    <thead className="bg-white/5 text-slate-300 font-medium text-sm">
                        <tr>
                           <th className="px-6 py-4">Nome da Forma de Pagamento</th>
                           <th className="px-6 py-4">Tipo</th>
@@ -432,32 +432,32 @@ const Finance: React.FC<FinanceProps> = ({
                           <th className="px-6 py-4 text-right">Ações</th>
                        </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100">
+                    <tbody className="divide-y divide-white/10">
                        {paymentMethods.map(method => (
-                          <tr key={method.id} className="hover:bg-slate-50">
-                             <td className="px-6 py-4 font-medium text-slate-800">{method.name}</td>
-                             <td className="px-6 py-4 text-slate-600">
-                                <span className="bg-slate-100 px-2 py-1 rounded text-xs">{method.type}</span>
+                          <tr key={method.id} className="hover:bg-white/5">
+                             <td className="px-6 py-4 font-medium text-slate-200">{method.name}</td>
+                             <td className="px-6 py-4 text-slate-400">
+                                <span className="bg-white/10 px-2 py-1 rounded text-xs">{method.type}</span>
                              </td>
-                             <td className="px-6 py-4 text-right font-medium text-slate-700">
+                             <td className="px-6 py-4 text-right font-medium text-slate-300">
                                 {method.feePercentage > 0 ? (
-                                  <span className="text-red-600">-{method.feePercentage}%</span>
+                                  <span className="text-red-400">-{method.feePercentage}%</span>
                                 ) : (
-                                  <span className="text-emerald-600">Isento</span>
+                                  <span className="text-emerald-400">Isento</span>
                                 )}
                              </td>
                              <td className="px-6 py-4 text-right">
                                 <div className="flex items-center justify-end gap-2">
                                    <button 
                                       onClick={() => openPaymentMethodModal(method)}
-                                      className="p-1.5 text-slate-400 hover:text-indigo-600 rounded hover:bg-indigo-50 transition-colors"
+                                      className="p-1.5 text-slate-400 hover:text-indigo-400 rounded hover:bg-indigo-500/10 transition-colors"
                                       title="Editar"
                                    >
                                       <Edit2 size={18} />
                                    </button>
                                    <button 
                                       onClick={() => onDeletePaymentMethod(method.id)}
-                                      className="p-1.5 text-slate-400 hover:text-red-600 rounded hover:bg-red-50 transition-colors"
+                                      className="p-1.5 text-slate-400 hover:text-red-400 rounded hover:bg-red-500/10 transition-colors"
                                       title="Excluir"
                                    >
                                       <Trash2 size={18} />
@@ -475,27 +475,27 @@ const Finance: React.FC<FinanceProps> = ({
 
       {/* Payment Method Modal */}
       {isPaymentMethodModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 animate-scale-in">
-            <h3 className="text-xl font-bold text-slate-800 mb-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-w-md w-full p-6 animate-scale-in">
+            <h3 className="text-xl font-bold text-slate-100 mb-4">
                {editingPaymentMethodId ? 'Editar Forma de Pagamento' : 'Nova Forma de Pagamento'}
             </h3>
             <form onSubmit={handlePaymentMethodSubmit} className="space-y-4">
                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Nome (Exibição)</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Nome (Exibição)</label>
                   <input 
                      required
                      type="text" 
-                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                      value={paymentMethodForm.name}
                      onChange={e => setPaymentMethodForm({...paymentMethodForm, name: e.target.value})}
                      placeholder="Ex: Visa Crédito 1x"
                   />
                </div>
                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Tipo</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Tipo</label>
                   <select
-                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white text-slate-900"
+                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                      value={paymentMethodForm.type}
                      onChange={e => setPaymentMethodForm({...paymentMethodForm, type: e.target.value as any})}
                   >
@@ -509,18 +509,18 @@ const Finance: React.FC<FinanceProps> = ({
                   </select>
                </div>
                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Taxa (%)</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Taxa (%)</label>
                   <div className="relative">
                      <input 
                         required
                         type="number" 
                         step="0.01"
                         min="0"
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                        className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                         value={paymentMethodForm.feePercentage}
                         onChange={e => setPaymentMethodForm({...paymentMethodForm, feePercentage: parseFloat(e.target.value)})}
                      />
-                     <span className="absolute right-3 top-2.5 text-slate-400 text-sm">%</span>
+                     <span className="absolute right-3 top-2.5 text-slate-500 text-sm">%</span>
                   </div>
                   <p className="text-xs text-slate-500 mt-1">Taxa administrativa descontada do valor recebido.</p>
                </div>
@@ -529,13 +529,13 @@ const Finance: React.FC<FinanceProps> = ({
                 <button 
                   type="button"
                   onClick={() => setIsPaymentMethodModalOpen(false)}
-                  className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-medium"
+                  className="px-4 py-2 text-slate-400 hover:bg-slate-800 rounded-lg font-medium transition-colors"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-900/20"
                 >
                   Salvar
                 </button>
@@ -547,12 +547,12 @@ const Finance: React.FC<FinanceProps> = ({
 
       {/* Transaction Modal */}
       {isTransactionModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 animate-scale-in">
-            <h3 className="text-xl font-bold text-slate-800 mb-4">Nova Transação</h3>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-w-lg w-full p-6 animate-scale-in">
+            <h3 className="text-xl font-bold text-slate-100 mb-4">Nova Transação</h3>
             <form onSubmit={handleTransactionSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Tipo</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Tipo</label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input 
@@ -560,9 +560,9 @@ const Finance: React.FC<FinanceProps> = ({
                       name="type"
                       checked={newTransaction.type === TransactionType.INCOME}
                       onChange={() => setNewTransaction({...newTransaction, type: TransactionType.INCOME})}
-                      className="text-indigo-600 focus:ring-indigo-500"
+                      className="text-indigo-500 focus:ring-indigo-500 bg-slate-800 border-slate-700"
                     />
-                    <span className="text-slate-700">Receita</span>
+                    <span className="text-slate-300">Receita</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input 
@@ -570,19 +570,19 @@ const Finance: React.FC<FinanceProps> = ({
                       name="type"
                       checked={newTransaction.type === TransactionType.EXPENSE}
                       onChange={() => setNewTransaction({...newTransaction, type: TransactionType.EXPENSE})}
-                      className="text-indigo-600 focus:ring-indigo-500"
+                      className="text-indigo-500 focus:ring-indigo-500 bg-slate-800 border-slate-700"
                     />
-                    <span className="text-slate-700">Despesa</span>
+                    <span className="text-slate-300">Despesa</span>
                   </label>
                 </div>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Descrição</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Descrição</label>
                 <input 
                   required
                   type="text" 
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                   value={newTransaction.description || ''}
                   onChange={e => setNewTransaction({...newTransaction, description: e.target.value})}
                 />
@@ -590,22 +590,22 @@ const Finance: React.FC<FinanceProps> = ({
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Valor (R$)</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Valor (R$)</label>
                   <input 
                     required
                     type="number" 
                     step="0.01"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                     value={newTransaction.amount || ''}
                     onChange={e => setNewTransaction({...newTransaction, amount: Number(e.target.value)})}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Data</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Data</label>
                   <input 
                     required
                     type="date" 
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                    className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                     value={newTransaction.date}
                     onChange={e => setNewTransaction({...newTransaction, date: e.target.value})}
                   />
@@ -613,9 +613,9 @@ const Finance: React.FC<FinanceProps> = ({
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Categoria</label>
+                <label className="block text-sm font-medium text-slate-300 mb-1">Categoria</label>
                 <select 
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white text-slate-900"
+                  className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                   value={newTransaction.category || ''}
                   onChange={e => setNewTransaction({...newTransaction, category: e.target.value})}
                 >
@@ -633,13 +633,13 @@ const Finance: React.FC<FinanceProps> = ({
                 <button 
                   type="button"
                   onClick={() => setIsTransactionModalOpen(false)}
-                  className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-medium"
+                  className="px-4 py-2 text-slate-400 hover:bg-slate-800 rounded-lg font-medium transition-colors"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-900/20"
                 >
                   Salvar
                 </button>
@@ -651,27 +651,27 @@ const Finance: React.FC<FinanceProps> = ({
 
       {/* Cost Center Modal */}
       {isCostCenterModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 animate-scale-in">
-            <h3 className="text-xl font-bold text-slate-800 mb-4">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 border border-white/10 rounded-xl shadow-2xl max-w-md w-full p-6 animate-scale-in">
+            <h3 className="text-xl font-bold text-slate-100 mb-4">
                {editingCostCenterId ? 'Editar Centro de Custo' : 'Novo Centro de Custo'}
             </h3>
             <form onSubmit={handleCostCenterSubmit} className="space-y-4">
                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Nome</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Nome</label>
                   <input 
                      required
                      type="text" 
-                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                      value={costCenterForm.name}
                      onChange={e => setCostCenterForm({...costCenterForm, name: e.target.value})}
                      placeholder="Ex: Aluguel, Marketing..."
                   />
                </div>
                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Tipo de Custo</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Tipo de Custo</label>
                   <select
-                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white text-slate-900"
+                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                      value={costCenterForm.type}
                      onChange={e => setCostCenterForm({...costCenterForm, type: e.target.value as any})}
                   >
@@ -683,10 +683,10 @@ const Finance: React.FC<FinanceProps> = ({
                   </p>
                </div>
                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Descrição</label>
+                  <label className="block text-sm font-medium text-slate-300 mb-1">Descrição</label>
                   <textarea 
                      rows={3}
-                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
+                     className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-white"
                      value={costCenterForm.description || ''}
                      onChange={e => setCostCenterForm({...costCenterForm, description: e.target.value})}
                   />
@@ -696,13 +696,13 @@ const Finance: React.FC<FinanceProps> = ({
                 <button 
                   type="button"
                   onClick={() => setIsCostCenterModalOpen(false)}
-                  className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-medium"
+                  className="px-4 py-2 text-slate-400 hover:bg-slate-800 rounded-lg font-medium transition-colors"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-900/20"
                 >
                   Salvar
                 </button>
