@@ -1,7 +1,7 @@
 
 import pool from './db';
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   try {
     // Busca dados de todas as tabelas em paralelo para performance
     const [
@@ -28,14 +28,11 @@ export default async function handler(req, res) {
     ]);
 
     // Função auxiliar para processar campos numéricos que vêm como string do Postgres
-    const fixNumbers = (rows) => rows.map(row => {
+    const fixNumbers = (rows: any[]) => rows.map((row: any) => {
       const newRow = { ...row };
       ['price', 'cost', 'profit_margin', 'total_value', 'labor_value', 'value', 'amount', 'salary', 'advances', 'fee_percentage', 'service_commission', 'percentage'].forEach(key => {
         if (newRow[key]) newRow[key] = Number(newRow[key]);
       });
-      // CamelCase conversion simple fix for keys if needed, 
-      // but in App.tsx we should map database snake_case to camelCase types ideally.
-      // For this implementation, we assume the Frontend types match or we adapt here.
       
       // Quick adaptations for snake_case DB to camelCase Frontend
       if(newRow.client_id) { newRow.clientId = newRow.client_id; delete newRow.client_id; }
@@ -68,7 +65,7 @@ export default async function handler(req, res) {
     });
 
     // Helper for Settings (single row tables)
-    const formatSettings = (rows) => {
+    const formatSettings = (rows: any[]) => {
        if (rows.length === 0) return null;
        const data = rows[0];
        // CamelCase fixes for settings
@@ -108,7 +105,7 @@ export default async function handler(req, res) {
     };
 
     res.status(200).json(payload);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Database fetch error:", error);
     res.status(500).json({ error: "Failed to fetch data from Neon DB" });
   }

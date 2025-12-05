@@ -1,7 +1,7 @@
 
 import pool from './db';
 
-export default async function handler(req, res) {
+export default async function handler(req: any, res: any) {
   const sql = `
     -- Habilita extensão para UUIDs
     CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -207,7 +207,7 @@ export default async function handler(req, res) {
   try {
     await pool.query(sql);
     res.status(200).json({ message: 'Tabelas criadas/atualizadas com sucesso!' });
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
