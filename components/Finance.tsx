@@ -670,28 +670,17 @@ const Finance: React.FC<FinanceProps> = ({
                </div>
                <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Tipo de Custo</label>
-                  <div className="flex gap-4">
-                     <label className="flex items-center gap-2 cursor-pointer">
-                        <input 
-                           type="radio" 
-                           name="costType"
-                           checked={costCenterForm.type === 'Fixo'}
-                           onChange={() => setCostCenterForm({...costCenterForm, type: 'Fixo'})}
-                           className="text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <span className="text-slate-700">Custo Fixo</span>
-                     </label>
-                     <label className="flex items-center gap-2 cursor-pointer">
-                        <input 
-                           type="radio" 
-                           name="costType"
-                           checked={costCenterForm.type === 'Variável'}
-                           onChange={() => setCostCenterForm({...costCenterForm, type: 'Variável'})}
-                           className="text-indigo-600 focus:ring-indigo-500"
-                        />
-                        <span className="text-slate-700">Custo Variável</span>
-                     </label>
-                  </div>
+                  <select
+                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white text-slate-900"
+                     value={costCenterForm.type}
+                     onChange={e => setCostCenterForm({...costCenterForm, type: e.target.value as any})}
+                  >
+                     <option value="Fixo">Custo Fixo</option>
+                     <option value="Variável">Custo Variável</option>
+                  </select>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Custos fixos ocorrem periodicamente (ex: Aluguel). Custos variáveis dependem da atividade (ex: Peças).
+                  </p>
                </div>
                <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Descrição</label>
