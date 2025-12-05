@@ -49,6 +49,7 @@ export interface WorkOrder {
   paymentStatus: 'Pendente' | 'Pago';
   warrantyDetails?: string;
   checklistId?: string; // Link to a checklist
+  observations?: string; // New field for free text notes
 }
 
 export interface Transaction {

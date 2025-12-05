@@ -33,7 +33,8 @@ const WorkOrders: React.FC<WorkOrdersProps> = ({ orders, products, checklists, p
     paymentStatus: 'Pendente',
     dateStart: '',
     dateEnd: '',
-    checklistId: ''
+    checklistId: '',
+    observations: ''
   };
   const [formData, setFormData] = useState<Partial<WorkOrder>>(initialFormState);
   
@@ -167,21 +168,36 @@ const WorkOrders: React.FC<WorkOrdersProps> = ({ orders, products, checklists, p
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.clientName && formData.description) {
-      const orderToSave = {
-        ...formData,
-        id: editingId || '', // Empty ID tells App.tsx to generate sequential ID
-        dateCreated: formData.dateCreated || new Date().toLocaleDateString('pt-BR'),
-        clientId: 'CLI-001' // Mock
-      } as WorkOrder;
 
-      if (editingId) {
-        onUpdateOrder(orderToSave);
-      } else {
-        onAddOrder(orderToSave);
-      }
-      setIsModalOpen(false);
+    // Validação de campos obrigatórios
+    if (!formData.clientName || !formData.clientName.trim()) {
+      alert("O campo Cliente é obrigatório.");
+      return;
     }
+
+    if (!formData.description || !formData.description.trim()) {
+      alert("O campo Descrição do Serviço é obrigatório.");
+      return;
+    }
+
+    if (formData.laborValue === undefined || formData.laborValue === null || formData.laborValue < 0) {
+      alert("Por favor, informe um valor válido para a Mão de Obra.");
+      return;
+    }
+
+    const orderToSave = {
+      ...formData,
+      id: editingId || '', // Empty ID tells App.tsx to generate sequential ID
+      dateCreated: formData.dateCreated || new Date().toLocaleDateString('pt-BR'),
+      clientId: 'CLI-001' // Mock
+    } as WorkOrder;
+
+    if (editingId) {
+      onUpdateOrder(orderToSave);
+    } else {
+      onAddOrder(orderToSave);
+    }
+    setIsModalOpen(false);
   };
 
   const getStatusColor = (status: OSTatus) => {
@@ -293,6 +309,7 @@ const WorkOrders: React.FC<WorkOrdersProps> = ({ orders, products, checklists, p
                         <div className="text-xs text-slate-400 mt-1 flex items-center gap-2">
                           <span>{order.products?.length || 0} produtos</span>
                           {order.checklistId && <span className="flex items-center gap-1 text-indigo-500"><CheckSquare size={10}/> Checklist</span>}
+                          {order.observations && <span className="text-[10px] px-1 bg-slate-200 rounded">Obs</span>}
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right font-bold text-slate-800">R$ {order.totalValue.toFixed(2)}</td>
@@ -368,6 +385,11 @@ const WorkOrders: React.FC<WorkOrdersProps> = ({ orders, products, checklists, p
                         <div className="flex justify-between bg-indigo-50 p-1 rounded px-2">
                            <span className="text-indigo-600 font-medium">Entrega</span>
                            <span className="text-indigo-700 font-bold">{new Date(order.dateEnd).toLocaleDateString('pt-BR')}</span>
+                        </div>
+                      )}
+                      {order.observations && (
+                        <div className="mt-2 text-xs text-slate-500 italic bg-slate-50 p-2 rounded">
+                          Obs: {order.observations.length > 50 ? order.observations.substring(0, 50) + '...' : order.observations}
                         </div>
                       )}
                     </div>
@@ -530,7 +552,7 @@ const WorkOrders: React.FC<WorkOrdersProps> = ({ orders, products, checklists, p
               {/* Basic Info */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Cliente</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Cliente *</label>
                   <input 
                     required
                     type="text" 
@@ -591,13 +613,25 @@ const WorkOrders: React.FC<WorkOrdersProps> = ({ orders, products, checklists, p
 
               {/* Description */}
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Descrição do Serviço</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Descrição do Serviço *</label>
                 <textarea 
                   required
                   rows={3}
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900"
                   value={formData.description || ''}
                   onChange={e => setFormData({...formData, description: e.target.value})}
+                />
+              </div>
+
+              {/* Observations - New Field */}
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Observações / Notas Internas</label>
+                <textarea 
+                  rows={3}
+                  className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none text-slate-900 placeholder-slate-400"
+                  value={formData.observations || ''}
+                  onChange={e => setFormData({...formData, observations: e.target.value})}
+                  placeholder="Informações adicionais, diagnósticos técnicos ou anotações..."
                 />
               </div>
 
@@ -685,7 +719,7 @@ const WorkOrders: React.FC<WorkOrdersProps> = ({ orders, products, checklists, p
               {/* Values */}
               <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100">
                 <div>
-                   <label className="block text-sm font-medium text-slate-700 mb-1">Mão de Obra (R$)</label>
+                   <label className="block text-sm font-medium text-slate-700 mb-1">Mão de Obra (R$) *</label>
                    <input 
                       required
                       type="number" 
