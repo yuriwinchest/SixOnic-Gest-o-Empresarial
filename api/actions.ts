@@ -1,5 +1,5 @@
 
-import pool from './db';
+import pool from './db.js';
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
@@ -14,10 +14,10 @@ export default async function handler(req: any, res: any) {
     switch (action) {
       // --- CLIENTES ---
       case 'create_client':
-        const { 
-          id: cId, type, name, razaoSocial, cpf, rg, cnpj, email, 
-          phone, companyPhone, sellerContact, maritalStatus, password, 
-          blocked, address 
+        const {
+          id: cId, type, name, razaoSocial, cpf, rg, cnpj, email,
+          phone, companyPhone, sellerContact, maritalStatus, password,
+          blocked, address
         } = data;
 
         result = await pool.query(
@@ -57,7 +57,7 @@ export default async function handler(req: any, res: any) {
         break;
 
       // --- TODO: Adicionar cases para Produtos, OS, etc. conforme necessidade ---
-      
+
       default:
         return res.status(400).json({ error: 'Action not supported' });
     }

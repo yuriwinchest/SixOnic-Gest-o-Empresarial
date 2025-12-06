@@ -7,23 +7,6 @@
 2. **`.env.example`** - Template de variáveis (sem credenciais)
 3. **`vercel.json`** - Configuração da Vercel
 4. **`DEPLOY_VERCEL.md`** - Guia completo de deploy
-5. **`prepare-deploy.ps1`** - Script de preparação (PowerShell)
-6. **`prepare-deploy.sh`** - Script de preparação (Bash)
-
-### ✅ Modificados:
-1. **`.gitignore`** - Adicionado `.env` para proteger credenciais
-2. **`api/db.ts`** - Removidas credenciais hardcoded
-3. **`vite.config.ts`** - Configurado para carregar variáveis de ambiente
-
-## 🎯 Status Atual
-
-✅ **Dependências instaladas**
-✅ **Build testado e funcionando**
-✅ **Credenciais protegidas**
-✅ **Pronto para deploy**
-
----
-
 ## 🚀 PRÓXIMOS PASSOS - DEPLOY NA VERCEL
 
 ### 1️⃣ Subir para o GitHub
