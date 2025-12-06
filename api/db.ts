@@ -1,8 +1,12 @@
 
 import { Pool } from 'pg';
 
-// Utiliza a variável de ambiente DATABASE_URL ou a string de conexão fornecida diretamente
-const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_wLWz3katJn2P@ep-falling-night-ahvabkur-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require';
+// Utiliza a variável de ambiente DATABASE_URL
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error('DATABASE_URL environment variable is not set');
+}
 
 const pool = new Pool({
   connectionString,

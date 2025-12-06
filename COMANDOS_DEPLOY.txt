@@ -1,0 +1,67 @@
+# 🚀 COMANDOS RÁPIDOS PARA DEPLOY
+
+## ⚡ Execute estes comandos em sequência:
+
+### 1. Adicionar arquivos ao Git
+git add .
+
+### 2. Fazer commit
+git commit -m "feat: configuração Vercel + Neon database integration"
+
+### 3. Enviar para GitHub
+git push origin main
+
+---
+
+## 📋 DEPOIS, NA VERCEL:
+
+1. Acesse: https://vercel.com
+2. Clique: "Add New Project"
+3. Selecione seu repositório
+4. ANTES de deploy, adicione estas variáveis de ambiente:
+
+### Copie e cole cada variável (Nome = Valor):
+
+DATABASE_URL
+postgresql://neondb_owner:npg_wLWz3katJn2P@ep-falling-night-ahvabkur-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+POSTGRES_URL
+postgresql://neondb_owner:npg_wLWz3katJn2P@ep-falling-night-ahvabkur-pooler.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+POSTGRES_URL_NON_POOLING
+postgresql://neondb_owner:npg_wLWz3katJn2P@ep-falling-night-ahvabkur.c-3.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+POSTGRES_USER
+neondb_owner
+
+POSTGRES_HOST
+ep-falling-night-ahvabkur-pooler.c-3.us-east-1.aws.neon.tech
+
+POSTGRES_PASSWORD
+npg_wLWz3katJn2P
+
+POSTGRES_DATABASE
+neondb
+
+POSTGRES_PRISMA_URL
+postgresql://neondb_owner:npg_wLWz3katJn2P@ep-falling-night-ahvabkur-pooler.c-3.us-east-1.aws.neon.tech/neondb?connect_timeout=15&sslmode=require
+
+---
+
+## ✅ APÓS O DEPLOY:
+
+Teste acessando:
+https://seu-projeto.vercel.app/api/setup
+
+Deve retornar:
+{"message": "Tabelas criadas/atualizadas com sucesso!"}
+
+---
+
+## 🔄 PARA ATUALIZAÇÕES FUTURAS:
+
+git add .
+git commit -m "descrição da mudança"
+git push origin main
+
+(Deploy automático na Vercel!)
