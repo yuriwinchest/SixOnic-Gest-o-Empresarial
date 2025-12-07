@@ -1,0 +1,26 @@
+Include /etc/ssh/sshd_config.d/*.conf
+
+Port 22
+AddressFamily any
+ListenAddress 0.0.0.0
+ListenAddress ::
+
+PermitRootLogin yes
+KbdInteractiveAuthentication no
+UsePAM yes
+X11Forwarding yes
+PrintMotd no
+DebianBanner no
+
+AcceptEnv LANG LC_*
+PubkeyAuthentication yes
+PasswordAuthentication yes
+
+Subsystem sftp internal-sftp-server
+
+# Hestia SFTP Chroot
+Match User sftp_dummy99,HugoGandy_equipcas
+    ChrootDirectory /srv/jail/%u
+    X11Forwarding no
+    AllowTCPForwarding no
+    ForceCommand internal-sftp -d /home/%u

@@ -1,0 +1,14 @@
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup3
+sudo sed -i 's/Match User sftp_dummy99,HugoGandy_equipcas,HugoGandy/Match User sftp_dummy99,HugoGandy_equipcas/g' /etc/ssh/sshd_config
+sudo grep "Match User" /etc/ssh/sshd_config
+sudo sshd -t
+sudo systemctl restart sshd
+sudo chown -R HugoGandy:HugoGandy /home/HugoGandy
+sudo chmod 755 /home/HugoGandy
+sudo mkdir -p /home/HugoGandy/gestao-vendas/backend
+sudo mkdir -p /home/HugoGandy/web/equipcasa.com.br/public_html
+sudo chown -R HugoGandy:HugoGandy /home/HugoGandy/gestao-vendas
+sudo chown -R HugoGandy:HugoGandy /home/HugoGandy/web
+sudo chmod -R 755 /home/HugoGandy/gestao-vendas
+sudo chmod -R 755 /home/HugoGandy/web
+ls -la /home/HugoGandy/

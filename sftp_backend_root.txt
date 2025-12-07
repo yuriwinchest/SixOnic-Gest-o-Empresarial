@@ -1,0 +1,11 @@
+-mkdir /home/ver8wdgr/gestao-vendas
+-mkdir /home/ver8wdgr/gestao-vendas/backend
+cd /home/ver8wdgr/gestao-vendas/backend
+lcd server
+mput -r *
+lcd ..
+put package.json
+put .env.production .env
+cd /home/ver8wdgr/gestao-vendas
+put tabelas_sistema.sql
+bye

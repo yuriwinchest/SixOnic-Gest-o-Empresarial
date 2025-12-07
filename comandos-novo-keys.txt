@@ -1,0 +1,5 @@
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOfkiT5K4Azr3cYja0b6dU6TvJoIAfO5gwF7csOrPpo7 deploy-hugo-equipcasa" > /home/HugoGandy/.ssh/authorized_keys
+chmod 600 /home/HugoGandy/.ssh/authorized_keys
+chown HugoGandy:HugoGandy /home/HugoGandy/.ssh/authorized_keys
+cat /home/HugoGandy/.ssh/authorized_keys
+ls -la /home/HugoGandy/.ssh/authorized_keys

@@ -36,10 +36,10 @@ const INITIAL_STATE: AppState = {
     },
     standardPriceTable: 'Varejo',
     discountLevels: [
-      { id: '1', label: 'Gerência', maxDiscount: 20, color: '#10b981' }, 
-      { id: '2', label: 'Supervisão', maxDiscount: 15, color: '#3b82f6' }, 
-      { id: '3', label: 'Vendedor Pleno', maxDiscount: 10, color: '#f59e0b' }, 
-      { id: '4', label: 'Balcão', maxDiscount: 5, color: '#ef4444' }, 
+      { id: '1', label: 'Gerência', maxDiscount: 20, color: '#10b981' },
+      { id: '2', label: 'Supervisão', maxDiscount: 15, color: '#3b82f6' },
+      { id: '3', label: 'Vendedor Pleno', maxDiscount: 10, color: '#f59e0b' },
+      { id: '4', label: 'Balcão', maxDiscount: 5, color: '#ef4444' },
     ],
     documentSequences: {
       workOrder: { prefix: 'OS-', nextNumber: 1026 },
@@ -138,24 +138,37 @@ const App: React.FC = () => {
       // Here we fetch always to have data ready
       setIsLoading(true);
       try {
-        const response = await fetch('/api/state');
-        if (response.ok) {
-          const dbData = await response.json();
-          // Merge fetched data with initial state structure to ensure all keys exist
-          setState(prev => ({
-            ...prev,
-            ...dbData,
-            // Fallback for objects if DB returns null (empty tables)
-            companySettings: dbData.companySettings || prev.companySettings,
-            storeSettings: dbData.storeSettings || prev.storeSettings,
-          }));
-          setDbStatus('connected');
-        } else {
-          console.warn("API not reachable, using local mock data.");
-          setDbStatus('disconnected');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 segundos timeout
+
+        try {
+          const response = await fetch('/api/state', { signal: controller.signal });
+          clearTimeout(timeoutId);
+
+          // Check if response is JSON
+          const contentType = response.headers.get('content-type');
+          if (response.ok && contentType && contentType.includes('application/json')) {
+            const dbData = await response.json();
+            // Merge fetched data with initial state structure to ensure all keys exist
+            setState(prev => ({
+              ...prev,
+              ...dbData,
+              // Fallback for objects if DB returns null (empty tables)
+              companySettings: dbData.companySettings || prev.companySettings,
+              storeSettings: dbData.storeSettings || prev.storeSettings,
+            }));
+            setDbStatus('connected');
+            console.log('✅ Conectado ao banco de dados Neon');
+          } else {
+            console.warn("⚠️ API não disponível localmente. Usando dados mock.");
+            setDbStatus('disconnected');
+          }
+        } catch (fetchError) {
+          // Ignora erro de requisição para não travar, cairá no catch externo ou seguirá com mock
         }
       } catch (error) {
-        console.error("Failed to connect to backend:", error);
+        // Silently fail in development when backend is not available
+        console.warn("⚠️ Backend não disponível (normal em desenvolvimento local). Usando dados mock.");
         setDbStatus('disconnected');
       } finally {
         setIsLoading(false);
@@ -168,7 +181,7 @@ const App: React.FC = () => {
   // Sync Helper to send data to backend
   const syncData = async (action: string, data?: any, id?: string) => {
     if (dbStatus === 'disconnected') return;
-    
+
     try {
       await fetch('/api/actions', {
         method: 'POST',
@@ -204,12 +217,12 @@ const App: React.FC = () => {
   };
 
   // State Handlers (Admin)
-  
+
   // Products (Local only for now until api/actions supports it)
   const handleAddProduct = (product: Product) => {
     setState(prev => ({ ...prev, products: [...prev.products, product] }));
   };
-  
+
   const handleUpdateProduct = (product: Product) => {
     setState(prev => ({
       ...prev,
@@ -233,9 +246,9 @@ const App: React.FC = () => {
         }
       });
       const updatedExistingList = Array.from(productMap.values());
-      return { 
-        ...prev, 
-        products: [...updatedExistingList, ...productsToAdd] 
+      return {
+        ...prev,
+        products: [...updatedExistingList, ...productsToAdd]
       };
     });
   };
@@ -245,20 +258,20 @@ const App: React.FC = () => {
     let newSettings = { ...state.companySettings };
 
     if (!order.id) {
-        const seq = newSettings.documentSequences.workOrder;
-        finalOrder = { ...order, id: `${seq.prefix}${seq.nextNumber}` };
-        newSettings.documentSequences.workOrder.nextNumber++;
+      const seq = newSettings.documentSequences.workOrder;
+      finalOrder = { ...order, id: `${seq.prefix}${seq.nextNumber}` };
+      newSettings.documentSequences.workOrder.nextNumber++;
     }
 
-    setState(prev => ({ 
-        ...prev, 
-        workOrders: [finalOrder, ...prev.workOrders],
-        companySettings: newSettings
+    setState(prev => ({
+      ...prev,
+      workOrders: [finalOrder, ...prev.workOrders],
+      companySettings: newSettings
     }));
   };
 
   const handleUpdateOrder = (order: WorkOrder) => {
-     setState(prev => ({
+    setState(prev => ({
       ...prev,
       workOrders: prev.workOrders.map(o => o.id === order.id ? order : o)
     }));
@@ -344,13 +357,13 @@ const App: React.FC = () => {
     let newSettings = { ...state.companySettings };
 
     if (!sale.id) {
-        const seq = newSettings.documentSequences.sale;
-        finalSale = { ...sale, id: `${seq.prefix}${seq.nextNumber}` };
-        newSettings.documentSequences.sale.nextNumber++;
+      const seq = newSettings.documentSequences.sale;
+      finalSale = { ...sale, id: `${seq.prefix}${seq.nextNumber}` };
+      newSettings.documentSequences.sale.nextNumber++;
     }
 
-    setState(prev => ({ 
-      ...prev, 
+    setState(prev => ({
+      ...prev,
       sales: [finalSale, ...prev.sales],
       companySettings: newSettings,
       transactions: [
@@ -372,15 +385,15 @@ const App: React.FC = () => {
     let newSettings = { ...state.companySettings };
 
     if (!quote.id) {
-        const seq = newSettings.documentSequences.quote;
-        finalQuote = { ...quote, id: `${seq.prefix}${seq.nextNumber}` };
-        newSettings.documentSequences.quote.nextNumber++;
+      const seq = newSettings.documentSequences.quote;
+      finalQuote = { ...quote, id: `${seq.prefix}${seq.nextNumber}` };
+      newSettings.documentSequences.quote.nextNumber++;
     }
 
-    setState(prev => ({ 
-        ...prev, 
-        quotes: [finalQuote, ...prev.quotes],
-        companySettings: newSettings
+    setState(prev => ({
+      ...prev,
+      quotes: [finalQuote, ...prev.quotes],
+      companySettings: newSettings
     }));
   };
 
@@ -472,12 +485,12 @@ const App: React.FC = () => {
 
   // Setup Database Button (Admin only)
   const handleSetupDb = async () => {
-    if(confirm("Isso criará as tabelas no banco de dados Neon. Deseja continuar?")) {
+    if (confirm("Isso criará as tabelas no banco de dados Neon. Deseja continuar?")) {
       try {
         const res = await fetch('/api/setup');
         const msg = await res.json();
         alert(msg.message || msg.error);
-        if(res.ok) window.location.reload();
+        if (res.ok) window.location.reload();
       } catch (e) {
         alert("Erro ao conectar.");
       }
@@ -496,10 +509,10 @@ const App: React.FC = () => {
   // 1. If not authenticated, show Login
   if (!authState.isAuthenticated) {
     return (
-      <Login 
-        clients={state.clients} 
-        employees={state.employees} 
-        onLoginSuccess={handleLoginSuccess} 
+      <Login
+        clients={state.clients}
+        employees={state.employees}
+        onLoginSuccess={handleLoginSuccess}
       />
     );
   }
@@ -507,8 +520,8 @@ const App: React.FC = () => {
   // 2. If Client, show Client Portal
   if (authState.userType === 'client' && authState.user) {
     return (
-      <ClientPortal 
-        client={authState.user as Client} 
+      <ClientPortal
+        client={authState.user as Client}
         workOrders={state.workOrders}
         purchases={state.clientPurchases}
         onLogout={handleLogout}
@@ -535,8 +548,8 @@ const App: React.FC = () => {
         setIsMobileMenuOpen(false);
       }}
       className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium border
-        ${activeTab === tab 
-          ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.2)]' 
+        ${activeTab === tab
+          ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(34,211,238,0.2)]'
           : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 border-transparent'}`}
     >
       <Icon size={20} className={activeTab === tab ? "text-cyan-400" : "text-slate-400"} />
@@ -554,7 +567,7 @@ const App: React.FC = () => {
           </div>
           <h1 className="text-xl font-bold text-slate-100 tracking-tight">Nexus<span className="text-cyan-400">Gestão</span></h1>
         </div>
-        
+
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto custom-scrollbar">
           <NavItem tab="dashboard" icon={LayoutDashboard} label="Dashboard" />
           <NavItem tab="clients" icon={Users} label="Clientes" />
@@ -570,15 +583,15 @@ const App: React.FC = () => {
 
         <div className="p-4 border-t border-white/5 bg-slate-900/20">
           <div className="flex items-center gap-2 mb-4 px-2">
-             <div className={`w-2 h-2 rounded-full ${dbStatus === 'connected' ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
-             <span className="text-xs text-slate-400">{dbStatus === 'connected' ? 'DB Conectado' : 'Modo Offline'}</span>
-             {dbStatus === 'disconnected' && (
-                <button onClick={handleSetupDb} className="ml-auto text-xs text-blue-400 hover:underline" title="Configurar Tabelas">
-                   <Database size={12} /> Setup
-                </button>
-             )}
+            <div className={`w-2 h-2 rounded-full ${dbStatus === 'connected' ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+            <span className="text-xs text-slate-400">{dbStatus === 'connected' ? 'DB Conectado' : 'Modo Offline'}</span>
+            {dbStatus === 'disconnected' && (
+              <button onClick={handleSetupDb} className="ml-auto text-xs text-blue-400 hover:underline" title="Configurar Tabelas">
+                <Database size={12} /> Setup
+              </button>
+            )}
           </div>
-          <button 
+          <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 border border-transparent transition-colors font-medium mb-4"
           >
@@ -592,7 +605,7 @@ const App: React.FC = () => {
       <div className="lg:pl-64 flex-1 flex flex-col min-h-screen">
         <header className="bg-slate-900/40 backdrop-blur-md border-b border-white/5 h-16 flex items-center justify-between px-4 lg:px-8 sticky top-0 z-20 shadow-sm print:hidden">
           <div className="flex items-center gap-3 lg:hidden">
-            <button 
+            <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-2 text-slate-400 hover:bg-slate-800 rounded-lg"
             >
@@ -602,7 +615,7 @@ const App: React.FC = () => {
           </div>
 
           <div className="hidden lg:block text-slate-400 text-sm">
-             {new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+            {new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </div>
 
           <div className="flex items-center gap-4">
@@ -622,7 +635,7 @@ const App: React.FC = () => {
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)}></div>
             <nav className="fixed top-0 left-0 bottom-0 w-64 bg-slate-900 border-r border-white/10 p-4 space-y-2 shadow-2xl animate-slide-in">
               <div className="mb-8 flex items-center gap-2 px-2">
-                 <div className="bg-blue-600 p-2 rounded-lg">
+                <div className="bg-blue-600 p-2 rounded-lg">
                   <Package className="text-white" size={20} />
                 </div>
                 <h1 className="text-xl font-bold text-slate-100">Nexus</h1>
@@ -638,7 +651,7 @@ const App: React.FC = () => {
               <NavItem tab="finance" icon={DollarSign} label="Financeiro" />
               <NavItem tab="settings" icon={SettingsIcon} label="Configurações" />
               <div className="pt-4 mt-auto border-t border-white/10">
-                <button 
+                <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-colors font-medium"
                 >
@@ -655,7 +668,7 @@ const App: React.FC = () => {
           <div className="max-w-7xl mx-auto print:max-w-none print:mx-0">
             {activeTab === 'dashboard' && <Dashboard state={state} />}
             {activeTab === 'clients' && (
-              <Clients 
+              <Clients
                 clients={state.clients}
                 onAddClient={handleAddClient}
                 onUpdateClient={handleUpdateClient}
@@ -664,7 +677,7 @@ const App: React.FC = () => {
               />
             )}
             {activeTab === 'employees' && (
-              <Employees 
+              <Employees
                 employees={state.employees}
                 onAddEmployee={handleAddEmployee}
                 onUpdateEmployee={handleUpdateEmployee}
@@ -672,7 +685,7 @@ const App: React.FC = () => {
               />
             )}
             {activeTab === 'sales' && (
-              <Sales 
+              <Sales
                 sales={state.sales}
                 quotes={state.quotes}
                 products={state.products}
@@ -680,23 +693,23 @@ const App: React.FC = () => {
                 onAddSale={handleAddSale}
                 onAddQuote={handleAddQuote}
                 onUpdateQuoteStatus={handleUpdateQuoteStatus}
-                paymentMethods={state.paymentMethods} 
+                paymentMethods={state.paymentMethods}
                 onGenerateContract={handleGenerateContract}
               />
             )}
             {activeTab === 'os' && (
-              <WorkOrders 
-                orders={state.workOrders} 
+              <WorkOrders
+                orders={state.workOrders}
                 products={state.products}
                 checklists={state.checklists}
                 onAddOrder={handleAddOrder}
                 onUpdateOrder={handleUpdateOrder}
                 onAddTransaction={handleAddTransaction}
-                paymentMethods={state.paymentMethods} 
+                paymentMethods={state.paymentMethods}
               />
             )}
             {activeTab === 'checklists' && (
-              <Checklists 
+              <Checklists
                 checklists={state.checklists}
                 products={state.products}
                 onAddChecklist={handleAddChecklist}
@@ -705,7 +718,7 @@ const App: React.FC = () => {
               />
             )}
             {activeTab === 'inventory' && (
-              <Inventory 
+              <Inventory
                 products={state.products}
                 onAddProduct={handleAddProduct}
                 onUpdateProduct={handleUpdateProduct}
@@ -714,23 +727,23 @@ const App: React.FC = () => {
               />
             )}
             {activeTab === 'contracts' && (
-              <Contracts 
+              <Contracts
                 contracts={state.contracts}
-                contractTemplates={state.contractTemplates} 
+                contractTemplates={state.contractTemplates}
                 quotes={state.quotes}
                 clients={state.clients}
                 companySettings={state.companySettings}
                 onAddContract={handleAddContract}
                 onDeleteContract={handleDeleteContract}
-                onAddTemplate={handleAddTemplate} 
-                onUpdateTemplate={handleUpdateTemplate} 
-                onDeleteTemplate={handleDeleteTemplate} 
+                onAddTemplate={handleAddTemplate}
+                onUpdateTemplate={handleUpdateTemplate}
+                onDeleteTemplate={handleDeleteTemplate}
                 initialQuote={quoteForContract}
                 onClearInitialQuote={handleClearQuoteForContract}
               />
             )}
             {activeTab === 'finance' && (
-              <Finance 
+              <Finance
                 transactions={state.transactions}
                 onAddTransaction={handleAddTransaction}
                 marginRules={state.marginRules}
@@ -745,8 +758,8 @@ const App: React.FC = () => {
                 onDeletePaymentMethod={handleDeletePaymentMethod}
               />
             )}
-             {activeTab === 'settings' && (
-              <Settings 
+            {activeTab === 'settings' && (
+              <Settings
                 settings={state.companySettings}
                 onUpdateSettings={handleUpdateSettings}
               />

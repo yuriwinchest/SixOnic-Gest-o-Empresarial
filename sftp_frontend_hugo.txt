@@ -1,0 +1,4 @@
+cd /home/HugoGandy/web/equipcasa.com.br/public_html
+lcd dist
+mput -r *
+bye

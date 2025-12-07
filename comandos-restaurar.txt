@@ -1,0 +1,3 @@
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
+sudo systemctl restart sshd
+sudo systemctl status sshd

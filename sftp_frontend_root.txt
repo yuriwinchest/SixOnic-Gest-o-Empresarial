@@ -1,0 +1,7 @@
+-mkdir /home/ver8wdgr/web
+-mkdir /home/ver8wdgr/web/equipcasa.com.br
+-mkdir /home/ver8wdgr/web/equipcasa.com.br/public_html
+cd /home/ver8wdgr/web/equipcasa.com.br/public_html
+lcd dist
+mput -r *
+bye

@@ -1,0 +1,9 @@
+cd /home/HugoGandy/gestao-vendas/backend
+lcd server
+put index.js
+put db.js
+put sql.js
+lcd ..
+put package.json
+put .env.production .env
+bye

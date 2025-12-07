@@ -28,7 +28,7 @@ const Login: React.FC<LoginProps> = ({ clients, employees = [], onLoginSuccess }
       }
 
       // 1. Check Employee Login (Username or Email)
-      const employee = employees.find(e => 
+      const employee = employees.find(e =>
         (e.email === email || e.username === email) && e.password === password
       );
 
@@ -39,7 +39,7 @@ const Login: React.FC<LoginProps> = ({ clients, employees = [], onLoginSuccess }
 
       // 2. Check Client Login
       const client = clients.find(c => c.email === email && c.password === password && !c.blocked);
-      
+
       if (client) {
         onLoginSuccess('client', client);
       } else {
@@ -58,7 +58,7 @@ const Login: React.FC<LoginProps> = ({ clients, employees = [], onLoginSuccess }
     <div className="min-h-screen w-full flex items-center justify-center bg-slate-900 relative overflow-hidden font-sans">
       {/* Background Decor Effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-[#0f172a] to-indigo-950 z-0" />
-      
+
       {/* Glow Orbs */}
       <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[100px] animate-pulse" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px]" />
@@ -90,6 +90,8 @@ const Login: React.FC<LoginProps> = ({ clients, employees = [], onLoginSuccess }
                   </div>
                   <input
                     type="text"
+                    name="username"
+                    autoComplete="username"
                     required
                     className="block w-full pl-10 pr-3 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder-slate-400 font-medium"
                     placeholder="Seu identificador"
@@ -107,6 +109,8 @@ const Login: React.FC<LoginProps> = ({ clients, employees = [], onLoginSuccess }
                   </div>
                   <input
                     type="password"
+                    name="password"
+                    autoComplete="current-password"
                     required
                     className="block w-full pl-10 pr-3 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-900 placeholder-slate-400 font-medium"
                     placeholder="••••••••"
@@ -145,14 +149,14 @@ const Login: React.FC<LoginProps> = ({ clients, employees = [], onLoginSuccess }
               Acesso Rápido (Demo)
             </p>
             <div className="grid grid-cols-2 gap-3">
-              <button 
+              <button
                 onClick={() => handleFillCredentials('admin@nexus.com', 'admin')}
                 className="flex flex-col items-center justify-center p-2 rounded-lg border border-slate-200 bg-white hover:border-indigo-300 hover:shadow-sm transition-all text-xs"
               >
                 <span className="font-bold text-slate-700">Admin</span>
                 <span className="text-slate-400 scale-90">admin / admin</span>
               </button>
-              <button 
+              <button
                 onClick={() => handleFillCredentials('joao.silva', '123456')}
                 className="flex flex-col items-center justify-center p-2 rounded-lg border border-slate-200 bg-white hover:border-indigo-300 hover:shadow-sm transition-all text-xs"
               >
@@ -162,7 +166,7 @@ const Login: React.FC<LoginProps> = ({ clients, employees = [], onLoginSuccess }
             </div>
           </div>
         </div>
-        
+
         <p className="text-center text-slate-500 text-xs mt-8 opacity-60">
           © {new Date().getFullYear()} Nexus Gestão. Todos os direitos reservados.
         </p>

@@ -1,0 +1,6 @@
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup3
+sudo sed -i 's/Match User sftp_dummy99,HugoGandy_equipcas,HugoGandy/Match User sftp_dummy99,HugoGandy_equipcas/g' /etc/ssh/sshd_config
+sudo grep "Match User" /etc/ssh/sshd_config
+sudo sshd -t
+sudo systemctl restart sshd
+sudo systemctl status sshd

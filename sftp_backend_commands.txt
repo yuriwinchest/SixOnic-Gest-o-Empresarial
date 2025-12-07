@@ -1,0 +1,11 @@
+-mkdir /home/ver8wdgr/gestao-vendas
+-mkdir /home/ver8wdgr/gestao-vendas/backend
+-mkdir /home/ver8wdgr/gestao-vendas/backend/dist
+cd /home/ver8wdgr/gestao-vendas/backend
+put package.json
+cd dist
+put server/index.js server.js
+put server/db.js
+put server/sql.js
+put .env
+bye

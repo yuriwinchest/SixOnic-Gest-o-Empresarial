@@ -1,0 +1,6 @@
+sudo su - HugoGandy
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOfkiT5K4Azr3cYja0b6dU6TvJoIAfO5gwF7csOrPpo7 deploy-hugo-equipcasa" >> ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+cat ~/.ssh/authorized_keys
+exit

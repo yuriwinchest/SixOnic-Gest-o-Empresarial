@@ -1,0 +1,60 @@
+$ErrorActionPreference = "Stop"
+
+Write-Output "=== DEPLOY VIA PAINEL WEB - INSTRUÇÕES ==="
+Write-Output ""
+
+# 1. BUILD
+Write-Output ">>> PASSO 1: Fazendo build do frontend..."
+npm run build
+
+if (-not $?) {
+    Write-Error "Erro no build!"
+    exit 1
+}
+
+Write-Output ""
+Write-Output "✅ Build concluído!"
+Write-Output ""
+Write-Output "=== AGORA FAÇA O UPLOAD MANUAL ==="
+Write-Output ""
+Write-Output "📋 CREDENCIAIS:"
+Write-Output "   Painel: https://server.equipcasa.com.br:8083"
+Write-Output "   Usuário: HugoGandy"
+Write-Output "   Email: hugogandy45@gmail.com"
+Write-Output ""
+Write-Output "📁 UPLOAD FRONTEND:"
+Write-Output "   1. No painel, vá em File Manager"
+Write-Output "   2. Navegue até: /home/HugoGandy/web/equipcasa.com.br/public_html"
+Write-Output "   3. DELETE todos os arquivos antigos"
+Write-Output "   4. Faça upload de TODOS os arquivos da pasta:"
+Write-Output "      $(Get-Location)\dist"
+Write-Output ""
+Write-Output "📁 UPLOAD BACKEND:"
+Write-Output "   1. Navegue até: /home/HugoGandy/gestao-vendas/backend"
+Write-Output "   2. Faça upload dos arquivos:"
+Write-Output "      - $(Get-Location)\server\index.js"
+Write-Output "      - $(Get-Location)\server\db.js"
+Write-Output "      - $(Get-Location)\server\sql.js"
+Write-Output "      - $(Get-Location)\package.json"
+Write-Output "      - $(Get-Location)\.env.production (renomeie para .env)"
+Write-Output ""
+Write-Output "⚙️ CONFIGURAR BACKEND (Terminal SSH no painel):"
+Write-Output "   cd /home/HugoGandy/gestao-vendas/backend"
+Write-Output "   npm install --production"
+Write-Output "   pm2 delete all"
+Write-Output "   pm2 start index.js --name gestao-vendas"
+Write-Output "   pm2 save"
+Write-Output "   pm2 status"
+Write-Output ""
+Write-Output "💾 BANCO DE DADOS (phpMyAdmin no painel):"
+Write-Output "   1. Acesse phpMyAdmin"
+Write-Output "   2. Selecione o banco de dados"
+Write-Output "   3. Importe: $(Get-Location)\tabelas_sistema.sql"
+Write-Output ""
+Write-Output "🌐 TESTAR:"
+Write-Output "   https://equipcasa.com.br"
+Write-Output ""
+Write-Output "Pressione qualquer tecla para abrir o painel no navegador..."
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
+Start-Process "https://server.equipcasa.com.br:8083"

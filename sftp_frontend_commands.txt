@@ -1,0 +1,3 @@
+cd /home/ver8wdgr/web/equipcasa.com.br/public_html
+mput -r dist/*
+bye

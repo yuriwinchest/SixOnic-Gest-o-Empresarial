@@ -14,6 +14,15 @@ export default defineConfig(({ mode }) => {
       'process.env.POSTGRES_HOST': JSON.stringify(env.POSTGRES_HOST),
       'process.env.POSTGRES_PASSWORD': JSON.stringify(env.POSTGRES_PASSWORD),
       'process.env.POSTGRES_DATABASE': JSON.stringify(env.POSTGRES_DATABASE)
+    },
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3001',
+          changeOrigin: true,
+          secure: false
+        }
+      }
     }
   };
 });
